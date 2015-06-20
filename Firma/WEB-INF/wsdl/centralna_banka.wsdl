@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="centralnaBankaService" 
+	targetNamespace="http://centralnabanka"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:tns="http://centralnabanka"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:globals="http://xml/globals"
+	xmlns:mt102="http://xml/mt102"
+	xmlns:mt103="http://xml/mt103">
+
+	<wsdl:types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:tns="http://centralnabanka" 
+			targetNamespace="http://centralnabanka" 
+			version="1.0">
+
+			<xs:import namespace="http://xml/globals" 
+				schemaLocation="globals.xsd" />
+			<xs:import namespace="http://xml/mt102" 
+				schemaLocation="MT102.xsd" />
+			<xs:import namespace="http://xml/mt103" 
+				schemaLocation="MT103.xsd" />
+
+			<xs:element name="mt102Request" type="mt102:TMT102" />
+			<xs:element name="mt103Request" type="mt103:TMT103" />
+			<xs:element name="boolean" type="xs:boolean" />
+		</xs:schema>
+	</wsdl:types>
+
+	<wsdl:message name="mt102Request">
+		<wsdl:part name="parameters" element="tns:mt102Request">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="mt102Response">
+		<wsdl:part name="parameters" element="tns:boolean">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="mt103Request">
+		<wsdl:part name="parameters" element="tns:mt103Request">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="mt103Response">
+		<wsdl:part name="parameters" element="tns:boolean">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:portType name="centralnaBankaPort">
+		<wsdl:operation name="mt102">
+			<wsdl:input name="mt102Request" message="tns:mt102Request" />
+			<wsdl:output name="mt102Response" message="tns:mt102Response" />
+		</wsdl:operation>
+		<wsdl:operation name="mt103">
+			<wsdl:input name="mt103Request" message="tns:mt103Request" />
+			<wsdl:output name="mt103Response" message="tns:mt103Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="centralnaBankaBinding" type="tns:centralnaBankaPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="mt102">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="mt102Request">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="mt102Response">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="mt103">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="mt103Request">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="mt103Response">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="centralnaBankaService">
+		<wsdl:port name="centralnaBankaPort" binding="tns:centralnaBankaBinding">
+			<soap:address location="http://localhost:9090/centralnabanka" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>

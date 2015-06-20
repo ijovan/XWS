@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://xml/zahtevzaizvod"
+    xmlns="http://xml/zahtevzaizvod">
+
+    <xs:complexType name="TZahtevZaIzvod">
+        <xs:sequence>
+            <xs:element name="Broj_racuna">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="18"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Datum" type="xs:date"/>
+            <xs:element name="Radni_broj_preseka">
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:pattern value="[0-9]{2}"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

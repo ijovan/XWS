@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://xml/mt910"
+    xmlns:gl="http://xml/globals"
+    xmlns="http://xml/mt910">
+    <xs:import namespace="http://xml/globals" schemaLocation="globals.xsd"/>
+        <xs:complexType name="TMT910">
+            <xs:sequence>
+                <xs:element name="ID">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="50"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="SWIFT_Poverioca" type="gl:TSwiftCode"/>
+                <xs:element name="IDNalogPoruka">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string"/>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="ObrRacunBankePoverioca" type="gl:TOznakaRacuna"/>
+                <xs:element name="DatumValute" type="xs:date"/>
+                <xs:element name="Iznos">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:decimal">
+                            <xs:totalDigits value="15"/>
+                            <xs:fractionDigits value="2"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="SifraValute" type="gl:TOznakaValute"/>
+            </xs:sequence>
+        </xs:complexType>
+</xs:schema>
