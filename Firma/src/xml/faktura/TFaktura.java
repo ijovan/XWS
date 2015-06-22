@@ -5,12 +5,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import sessionbeans.common.Identifiable;
 
 
 /**
@@ -254,7 +257,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "zaglavlje",
     "stavkaFakture"
 })
-public class TFaktura {
+public class TFaktura extends Identifiable{
 
     @XmlElement(name = "Zaglavlje", required = true)
     protected TFaktura.Zaglavlje zaglavlje;
@@ -1323,5 +1326,17 @@ public class TFaktura {
         }
 
     }
+
+
+	@Override
+	public Long getId() {
+		return Long.parseLong(zaglavlje.idPoruke);
+	}
+
+	@Override
+	public void setId(Long value) {
+		zaglavlje.idPoruke = value.toString();
+		
+	}
 
 }
