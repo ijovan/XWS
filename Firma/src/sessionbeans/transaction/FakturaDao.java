@@ -1,11 +1,19 @@
 package sessionbeans.transaction;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.xml.sax.SAXException;
 
 import sessionbeans.common.GenericDao;
 import xml.faktura.TFaktura;
@@ -74,5 +82,33 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 		return merge(invoice, invoiceId);
 	}
 
+	
+	@Override
+	public boolean validateInvoice(TFaktura invoice){
+		JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance("xml.project.faktura");
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			//postavljanje validacije
+			//W3C sema
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			//lokacija seme
+			Schema schema = schemaFactory.newSchema(new File("./wsdl/faktura.xsd"));
+			//setuje se sema
+			jaxbMarshaller.setSchema(schema);
+			//EventHandler, koji obradjuje greske, ako se dese prilikom validacije
+			jaxbMarshaller.setEventHandler(new util.MyValidationEventHandler());
+            //ucitava se objektni model, a da se pri tome radi i validacija
+			jaxbMarshaller.marshal(invoice, new File("./xml/Faktura"+invoice.getId()+".xml"));
+		} catch (JAXBException e) {	
+			e.printStackTrace();
+			return false;
+		} catch (SAXException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 
 }
