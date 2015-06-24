@@ -98,12 +98,11 @@ public class InvoiceService {
 		ResponseBuilder rb = null;
 		if(isPartner(id)){
 			List<TFaktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
-			for (TFaktura tf : supplierInvoices)
-			{
+			rb = Response.status(Status.NOT_FOUND);//stavim da nije pronadjen u slucaju prazne liste
+			for (TFaktura tf : supplierInvoices){
 				if(tf.getId() == idi) {
 					rb = Response.ok(tf);
-				}else{
-					rb = Response.status(Status.NOT_FOUND);
+					break; //kad nadje kraj da ga ne pregazi
 				}
 			}
 		}else{
@@ -151,33 +150,33 @@ public class InvoiceService {
 	public Response createInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi, StavkaFakture sf) throws URISyntaxException{
 		ResponseBuilder rb=null;
 		TFaktura result = null;		
-			if(isPartner(id)){
-				if (sf.isValid())
-				{
-					try {
-						result = fakturaDao.createInvoiceItem(idi, sf);
-					} catch (IOException | JAXBException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-					if(result == null){
-						rb = Response.status(Status.NOT_FOUND);
-					}
-					else
-						{
-						rb = Response.created(new URI("/partneri/"+id+"/fakture/"+idi+"/stavke/"+sf.getRedniBroj()));
-						//.type("application/xml").entity(newInvoiceItem).build();		
-						}
+		if(isPartner(id)){
+			if (sf.isValid())
+			{
+				try {
+					result = fakturaDao.createInvoiceItem(idi, sf);
+				} catch (IOException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				if(result == null){
+					rb = Response.status(Status.NOT_FOUND);
 				}
 				else
 				{
-				rb= Response.status(Status.BAD_REQUEST);					
+					rb = Response.created(new URI("/partneri/"+id+"/fakture/"+idi+"/stavke/"+sf.getRedniBroj()));
+					//.type("application/xml").entity(newInvoiceItem).build();		
 				}
 			}
 			else
 			{
-				rb = Response.status(Status.FORBIDDEN);
+				rb= Response.status(Status.BAD_REQUEST);					
 			}
+		}
+		else
+		{
+			rb = Response.status(Status.FORBIDDEN);
+		}
 		return rb.build();
 	}
 
@@ -249,7 +248,7 @@ public class InvoiceService {
 				}
 				else
 				{
-				rb = Response.status(Status.BAD_REQUEST);
+					rb = Response.status(Status.BAD_REQUEST);
 				}
 			}else{
 				rb = Response.status(Status.FORBIDDEN);
@@ -304,7 +303,7 @@ public class InvoiceService {
 
 		return rb.build();
 	}
-	
+
 	private boolean isPartner(String firmId)
 	{
 		for (int i=0; i < p.length; i++)
@@ -312,7 +311,7 @@ public class InvoiceService {
 			if (firmId.equals(p[i]))
 				return true;
 		}
-		
+
 		return false;
 	}
 
