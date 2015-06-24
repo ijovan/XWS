@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://xml/racunBanke"
+    xmlns="http://xml/racunBanke">
+
+    <xs:complexType name="TRacunBanke">
+        <xs:sequence>
+            <xs:element name="swift" type="xs:string"/>
+            <xs:element name="ObracunskiRacun" type="xs:string"/>
+            <xs:element name="Stanje">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:totalDigits value="17"/>
+                        <xs:fractionDigits value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

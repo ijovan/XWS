@@ -47,7 +47,7 @@ public class FirmaClient {
 			int i = 0;
 			while (true) {
 				TIzvod presek = slanjeZahtevaZaIzvod(i++, date);
-				if (presek.getStavkaPreseka().size() == 0) {
+				if (presek.getStavkePreseka().size() == 0) {
 					break;
 				}
 			}

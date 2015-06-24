@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://xml/banka"
+    xmlns:mt="http://xml/mt102"
+    xmlns="http://xml/banka">
+
+    <xs:import namespace="http://xml/mt102" schemaLocation="MT102.xsd"/>
+
+    <xs:complexType name="TBanka">
+        <xs:sequence>
+            <xs:element name="oznakaBanke" type="xs:string"/>
+            <xs:element name="obracunskiRacun" type="xs:string"/>
+            <xs:element name="swiftKod" type="xs:string"/>
+            <xs:element name="placanja" type="mt:Placanje" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
