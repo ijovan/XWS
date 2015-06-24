@@ -88,7 +88,13 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 
 		url = new URL(builder.substring(0));
 		conn = (HttpURLConnection) url.openConnection();
-
+		//Autentifikacija u konekciji nisam siguran ali valjda je admin:admin
+		
+		String userpass = "admin:admin";
+		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+		conn.setRequestProperty ("Authorization", basicAuth);
+		conn.connect();
+		//
 		int responseCode = conn.getResponseCode();
 		String message = conn.getResponseMessage();
 
@@ -118,10 +124,17 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 
 		url = new URL(REST_URL + schemaName);
 		conn = (HttpURLConnection) url.openConnection();
+		
 		conn.setDoOutput(true);
 		conn.setRequestMethod(RequestMethod.POST);
 		conn.setRequestProperty("Content-Type", "application/query+xml");
+		//Autentifikacija u konekciji nisam siguran ali valjda je admin:admin
 		
+				String userpass = "admin:admin";
+				String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+				conn.setRequestProperty ("Authorization", basicAuth);
+				conn.connect();
+				//
 		/*
 		 * Generate HTTP POST body.
 		 */
@@ -137,7 +150,9 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		
 		if (responseCode == HttpURLConnection.HTTP_OK)
 			result = conn.getInputStream();
-		
+		//Boris
+		conn.disconnect();
+		//
 		return result;
 	}
 	
@@ -149,7 +164,13 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod(RequestMethod.PUT);
-
+		//Autentifikacija u konekciji nisam siguran ali valjda je admin:admin
+		
+				String userpass = "admin:admin";
+				String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+				conn.setRequestProperty ("Authorization", basicAuth);
+				conn.connect();
+		//
 		marshaller.marshal(entity, conn.getOutputStream());
 		
 		int responseCode = conn.getResponseCode();
@@ -164,7 +185,13 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(RequestMethod.DELETE);
+		//Autentifikacija u konekciji nisam siguran ali valjda je admin:admin
 		
+				String userpass = "admin:admin";
+				String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+				conn.setRequestProperty ("Authorization", basicAuth);
+				conn.connect();
+				//
 		int responseCode = conn.getResponseCode();
 		String message = conn.getResponseMessage();
 		
@@ -178,7 +205,13 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod(RequestMethod.PUT);
-
+		//Autentifikacija u konekciji nisam siguran ali valjda je admin:admin
+		
+				String userpass = "admin:admin";
+				String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+				conn.setRequestProperty ("Authorization", basicAuth);
+				conn.connect();
+				//
 		marshaller.marshal(entity, conn.getOutputStream());
 		
 		int responseCode = conn.getResponseCode();

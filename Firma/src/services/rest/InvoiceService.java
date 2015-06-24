@@ -31,7 +31,7 @@ import xml.faktura.TFaktura.StavkaFakture;
 public class InvoiceService {
 
 	private static Logger log = Logger.getLogger(TFaktura.class);
-	private String[] p= {"boris","pera","Cverdelj"};	
+	private String[] p= {"12","13","14"};	
 
 	@EJB
 	private FakturaDaoLocal fakturaDao;
@@ -50,6 +50,7 @@ public class InvoiceService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendInvoice(@PathParam("id") String id, TFaktura tf) throws JAXBException, IOException{
+		System.out.println("USAO U 1");
 		ResponseBuilder rb;
 		//provera da li je poslovni parner kompanije
 		if(isPartner(id)){
@@ -76,6 +77,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllInvoice(@PathParam("id") String id) throws IOException, JAXBException{
+		System.out.println("USAO U 2");
 		ResponseBuilder rb;
 		if(isPartner(id)){
 			rb = Response.ok(fakturaDao.getInvoicesForPartner(Long.parseLong(id))); 
@@ -95,6 +97,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findInvoiceById(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
+		System.out.println("USAO U 3");
 		ResponseBuilder rb = null;
 		if(isPartner(id)){
 			List<TFaktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
@@ -121,6 +124,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getInvoiceItems(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
+		System.out.println("USAO U 4");
 		ResponseBuilder rb;
 		if(isPartner(id)){
 			List<TFaktura.StavkaFakture> povratna = fakturaDao.getInvoiceItemsForInvoice(idi, Long.parseLong(id));
@@ -148,6 +152,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response createInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi, StavkaFakture sf) throws URISyntaxException{
+		System.out.println("USAO U 5");
 		ResponseBuilder rb=null;
 		TFaktura result = null;		
 		if(isPartner(id)){
@@ -190,6 +195,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke/{r_br}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getInvoiceItemByNo(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr){
+		System.out.println("USAO U 6");
 		ResponseBuilder rb =null;
 		StavkaFakture res = null;
 		try {
@@ -223,6 +229,7 @@ public class InvoiceService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr, StavkaFakture sf){
+		System.out.println("USAO U 7");
 		ResponseBuilder rb =null;
 		TFaktura res = null;
 		try {
@@ -271,6 +278,7 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke/{r_br}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr){
+		System.out.println("USAO U 8");
 		ResponseBuilder rb=null;
 		TFaktura res ;
 		try{
