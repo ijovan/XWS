@@ -1,6 +1,7 @@
 package sessionbeans.transaction;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
@@ -16,6 +17,10 @@ public interface FakturaDaoLocal extends GenericDaoLocal<TFaktura, Long>{
 	public TFaktura createInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException;
 
 	public TFaktura updateInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException;
+	
+	public List<TFaktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException;
+	
+	public List<TFaktura.StavkaFakture> getInvoiceItemsForInvoice(Long invoiceId, Long partnerId) throws IOException, JAXBException;
 	
 	boolean validateInvoice(TFaktura invoice);
 }

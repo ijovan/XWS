@@ -3,6 +3,7 @@ package services.rest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -19,8 +20,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
-
 import sessionbeans.transaction.FakturaDaoLocal;
 import xml.faktura.TFaktura;
 import xml.faktura.TFaktura.StavkaFakture;
@@ -29,8 +28,8 @@ import xml.faktura.TFaktura.StavkaFakture;
 @Path("/partneri")
 public class InvoiceService {
 
-	private static Logger log = Logger.getLogger(TFaktura.class);
-	private String[] p= {"boris","pera","Cverdelj"};	
+	//private static Logger log = Logger.getLogger(TFaktura.class);
+	private String[] p= {"12","13","14"};	
 
 	@EJB
 	private FakturaDaoLocal fakturaDao;
@@ -45,13 +44,14 @@ public class InvoiceService {
 	//	e) U sluèaju da dobavljaè nije poslovni partner kupca, odgovor je HTTP 403 Forbidden.
 	//	f) U sluèaju neispravne fakture, odgovor je HTTP 400 Bad Request.		
 	@POST
-	@Path("/{id}/fakture/") //id dobavljaca??
+	@Path("/{id}/fakture/") 
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendInvoice(@PathParam("id") String id, TFaktura tf) throws JAXBException, IOException{
+		System.out.println("USAO U 1");
 		ResponseBuilder rb;
 		//provera da li je poslovni parner kompanije
-		if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
+		if(isPartner(id)){
 			//provera da li je faktura ispravna
 			if(!fakturaDao.validateInvoice(tf)){
 				TFaktura save= fakturaDao.persist(tf);
@@ -75,9 +75,10 @@ public class InvoiceService {
 	@Path("/{id}/fakture")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllInvoice(@PathParam("id") String id) throws IOException, JAXBException{
+		System.out.println("USAO U 2");
 		ResponseBuilder rb;
-		if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-			rb = Response.ok(fakturaDao.findAll()); //promeniti da ga gleda po IDju!!!!!
+		if(isPartner(id)){
+			rb = Response.ok(fakturaDao.getInvoicesForPartner(Long.parseLong(id))); 
 		}else{
 			rb = Response.status(Status.FORBIDDEN);
 		}
@@ -94,18 +95,22 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findInvoiceById(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
-		ResponseBuilder rb;
-		if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-			if(fakturaDao.findById(idi) != null){
-				rb = Response.ok(fakturaDao.findById(idi));
-			}else{
-				rb = Response.status(Status.NOT_FOUND);
+		System.out.println("USAO U 3");
+		ResponseBuilder rb = null;
+		if(isPartner(id)){
+			List<TFaktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
+			rb = Response.status(Status.NOT_FOUND);//stavim da nije pronadjen u slucaju prazne liste
+			for (TFaktura tf : supplierInvoices){
+				if(tf.getId() == idi) {
+					rb = Response.ok(tf);
+					break; //kad nadje kraj da ga ne pregazi
+				}
 			}
 		}else{
 			rb = Response.status(Status.FORBIDDEN);
 		}
 
-		return rb.build();
+		return rb.build();    
 	}
 
 	//	4. GET <url_kupca>/partneri/<id_dobavljaca>/fakture/<id_fakture>/stavke
@@ -117,10 +122,12 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getInvoiceItems(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
+		System.out.println("USAO U 4");
 		ResponseBuilder rb;
-		if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-			if(fakturaDao.findById(idi) != null){
-				rb = Response.ok(fakturaDao.findAll());//PROMENI U findAllItems kada se napravi!!!!
+		if(isPartner(id)){
+			List<TFaktura.StavkaFakture> povratna = fakturaDao.getInvoiceItemsForInvoice(idi, Long.parseLong(id));
+			if( povratna != null){
+				rb = Response.ok(povratna);
 			}else{
 				rb = Response.status(Status.NOT_FOUND);
 			}
@@ -143,29 +150,36 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response createInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi, StavkaFakture sf) throws URISyntaxException{
+		System.out.println("USAO U 5");
 		ResponseBuilder rb=null;
-		String result = "";		
-		//NISAM SIGURAN NI U STA OVDE
-		try{
-			if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-				result =fakturaDao.findById(idi).toString(); //fakturaDao.addInvoiceItem(id_fakture, newInvoiceItem);
-				if(result.equalsIgnoreCase("404")){
+		TFaktura result = null;		
+		if(isPartner(id)){
+			if (sf.isValid())
+			{
+				try {
+					result = fakturaDao.createInvoiceItem(idi, sf);
+				} catch (IOException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				if(result == null){
 					rb = Response.status(Status.NOT_FOUND);
-				}else if(result.equalsIgnoreCase("403")){
-					rb = Response.status(403);
-				}else if(result.equalsIgnoreCase("201")){
-					rb = Response.created(new URI("/partneri/"+id+"/fakture/"+idi+"/stavke/"+sf.getRedniBroj()));//.type("application/xml").entity(newInvoiceItem).build();
-				}else{
-					rb= Response.status(Status.BAD_REQUEST);
 				}
-			}else{
-				rb = Response.status(Status.FORBIDDEN);
+				else
+				{
+					rb = Response.created(new URI("/partneri/"+id+"/fakture/"+idi+"/stavke/"+sf.getRedniBroj()));
+					//.type("application/xml").entity(newInvoiceItem).build();		
+				}
 			}
-		}catch (IOException e) {
-			e.printStackTrace();
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}	
+			else
+			{
+				rb= Response.status(Status.BAD_REQUEST);					
+			}
+		}
+		else
+		{
+			rb = Response.status(Status.FORBIDDEN);
+		}
 		return rb.build();
 	}
 
@@ -179,11 +193,12 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke/{r_br}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getInvoiceItemByNo(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr){
+		System.out.println("USAO U 6");
 		ResponseBuilder rb =null;
 		StavkaFakture res = null;
 		try {
-			if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-				res = fakturaDao.findItemInInvoice(idi, rbr);//.getInvoiceItemByIdFromInvoice(id_fakture, redni_broj);
+			if(isPartner(id)){
+				res = fakturaDao.findItemInInvoice(idi, rbr);
 				if(res != null){
 					rb = Response.ok().type("application/xml").entity(res); //proveri ti za svaki slucaj
 				}else{
@@ -192,7 +207,6 @@ public class InvoiceService {
 			}else{
 				rb = Response.status(Status.FORBIDDEN);
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JAXBException e) {
@@ -213,21 +227,33 @@ public class InvoiceService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr, StavkaFakture sf){
+		System.out.println("USAO U 7");
 		ResponseBuilder rb =null;
-		String res = null;
+		TFaktura res = null;
 		try {
-			if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-				res = fakturaDao.findItemInInvoice(idi, rbr).toString();//.modifyInvoiceItemFromInvoice(sf, id_fakture, redni_broj);
-				if(res.equalsIgnoreCase("200")){
-					rb = Response.ok().type("application/xml").entity(sf); //proveri ti za svaki slucaj
-				}else if(res.equalsIgnoreCase("404")){
-					rb = Response.status(Status.NOT_FOUND);
-				}else if(res.equalsIgnoreCase("403")){
-					rb = Response.status(Status.FORBIDDEN);
-				}else if(res.equalsIgnoreCase("400")){
-					rb= Response.status(Status.BAD_REQUEST);
-				}else{
-					rb = Response.status(Status.INTERNAL_SERVER_ERROR);//to da znam da sam zeznuo
+			if(isPartner(id)){
+				if (sf.isValid())
+				{
+					if (fakturaDao.findById(idi) != null)
+					{
+						res = fakturaDao.updateInvoiceItem(idi, sf);
+						if (res != null)
+						{
+							rb = Response.status(Status.OK);
+						}
+						else
+						{
+							rb = Response.status(Status.NOT_FOUND);
+						}
+					}
+					else
+					{
+						rb = Response.status(Status.NOT_FOUND);
+					}
+				}
+				else
+				{
+					rb = Response.status(Status.BAD_REQUEST);
 				}
 			}else{
 				rb = Response.status(Status.FORBIDDEN);
@@ -250,19 +276,27 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke/{r_br}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr){
+		System.out.println("USAO U 8");
 		ResponseBuilder rb=null;
-		String res = "";
+		TFaktura res ;
 		try{
-			if(id.equalsIgnoreCase(p[0]) || id.equalsIgnoreCase(p[1]) ||id.equalsIgnoreCase(p[2])){
-				res = fakturaDao.findById(idi).toString();//.removeInvoiceItemByIdFromInvoice(id_fakture, redni_broj);
-				if(res.equalsIgnoreCase("204")){
-					rb = Response.status(Status.NO_CONTENT); 
-				}else if(res.equalsIgnoreCase("404")){
+			if(isPartner(id)){
+				res = fakturaDao.findById(idi);
+				if (res != null)
+				{
+					res = fakturaDao.removeItemFromInvoice(idi, rbr);
+					if (res != null)
+					{
+						rb = Response.status(Status.NO_CONTENT);
+					}
+					else
+					{
+						rb = Response.status(Status.NOT_FOUND);
+					}
+				}
+				else
+				{
 					rb = Response.status(Status.NOT_FOUND);
-				}else if(res.equalsIgnoreCase("403")){
-					rb = Response.status(Status.FORBIDDEN);
-				}else{
-					rb = Response.status(Status.INTERNAL_SERVER_ERROR);//to da znam da sam zeznuo
 				}
 			}else{
 				rb = Response.status(Status.FORBIDDEN);
@@ -274,6 +308,17 @@ public class InvoiceService {
 		}
 
 		return rb.build();
+	}
+
+	private boolean isPartner(String firmId)
+	{
+		for (int i=0; i < p.length; i++)
+		{
+			if (firmId.equals(p[i]))
+				return true;
+		}
+
+		return false;
 	}
 
 }

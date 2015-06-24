@@ -2,7 +2,9 @@ package sessionbeans.transaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -17,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import sessionbeans.common.GenericDao;
 import xml.faktura.TFaktura;
+import xml.faktura.TFaktura.StavkaFakture;
 
 @Stateless
 @Local(FakturaDaoLocal.class)
@@ -43,22 +46,31 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 
 	public TFaktura removeItemFromInvoice(Long invoiceId, Long itemId) throws IOException, JAXBException {
 		TFaktura invoice = findById(invoiceId);
+		boolean nadjena = false;
 		
 		if (invoice instanceof TFaktura) 
 			for (Iterator<TFaktura.StavkaFakture> iter = invoice.getStavkaFakture().listIterator(); iter.hasNext(); ) {
 				TFaktura.StavkaFakture item = iter.next();
 			    if (item.getRedniBroj().equals(itemId)) {
 			        iter.remove();
+			        nadjena = true;
 			    }
 			}
 		
-		return merge(invoice, invoiceId);
+		if (nadjena)
+			return merge(invoice, invoiceId);
+		else
+			return null;
 	}
 
 	public TFaktura createInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException {
 		TFaktura invoice = findById(invoiceId);
 		
-		if (invoice instanceof TFaktura) { 
+		if (invoice == null)
+		{
+			return null;
+		}
+		else if (invoice instanceof TFaktura) { 
 			invoice.getStavkaFakture().add(item);
 		}
 		
@@ -67,6 +79,7 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 	
 	public TFaktura updateInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException {
 		TFaktura invoice = findById(invoiceId);
+		boolean nadjena = false;
 		//List<TFaktura.StavkaFakture> newList = new ArrayList<TFaktura.StavkaFakture>();	MOZDA BABRA PO KOLEKCIJI KROZ KOJU ITERIRA
 		
 		if (invoice instanceof TFaktura) { 
@@ -74,12 +87,15 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 				TFaktura.StavkaFakture invoiceItem = iter.next();
 			    if (invoiceItem.getRedniBroj().equals(item.getRedniBroj())) {
 			        iter.remove();
+			        nadjena = true;
 			    }
 			}
 			invoice.getStavkaFakture().add(item);
 		}
-		
-		return merge(invoice, invoiceId);
+		if (nadjena)
+			return merge(invoice, invoiceId);
+		else
+			return null;
 	}
 
 	
@@ -107,6 +123,33 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<TFaktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException {
+		List<TFaktura> sveFakture = findAll();
+		List<TFaktura> povratna = new ArrayList<TFaktura>();
+		for (TFaktura tf : sveFakture)
+		{
+			if ( (tf.getZaglavlje().getPIBDobavljaca().equals(partnerId.toString()) )
+					|| (tf.getZaglavlje().getPIBKupca().equals(partnerId.toString())) ) 
+					{
+				 		povratna.add(tf);
+					}
+		}
+		return povratna;
+		
+	}
+
+	@Override
+	public List<StavkaFakture> getInvoiceItemsForInvoice(Long invoiceId, Long partnerId) throws IOException, JAXBException {
+		 List<TFaktura> listaPartnerskih = getInvoicesForPartner(partnerId);
+		 for (TFaktura tf : listaPartnerskih)
+		 {
+			 if ( tf.getId() == invoiceId)
+				 return tf.getStavkaFakture();
+		 }
+		return null;
 	}
 	
 	

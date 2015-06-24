@@ -37,7 +37,7 @@ public class FirmaClient {
 
 	public static void main(String[] args) {
 		slanjeNalogaZaPlacanje();
-		//zahtevZaIzvod();
+		zahtevZaIzvod();
 	}
 
 	private static void zahtevZaIzvod() {

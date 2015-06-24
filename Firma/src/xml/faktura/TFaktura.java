@@ -689,6 +689,11 @@ public class TFaktura extends Identifiable{
         public void setUkupanPorez(BigDecimal value) {
             this.ukupanPorez = value;
         }
+        
+        public boolean isValid()
+        {
+        	return true;
+        }
 
     }
 
