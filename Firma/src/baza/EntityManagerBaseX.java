@@ -18,6 +18,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.w3c.dom.Node;
 
+import rest.util.RequestMethod;
 import baza.basex.rest.Result;
 import baza.basex.rest.Results;
 
@@ -55,6 +56,21 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		
 		basex_context = JAXBContext.newInstance(BASEX_CONTEXT_PATH);
 		basex_unmarshaller = basex_context.createUnmarshaller();
+	}
+	
+	public static int createSchema(String schemaName) throws Exception {
+		System.out.println("=== PUT: create a new database: " + schemaName + " ===");
+		URL url = new URL(REST_URL + schemaName);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod(RequestMethod.PUT);
+		String userpass = "admin:admin";
+		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+		conn.setRequestProperty ("Authorization", basicAuth);
+		conn.connect();
+		int responseCode = conn.getResponseCode();
+		conn.disconnect();
+		return responseCode;
 	}
 	
 	@SuppressWarnings("unchecked")
