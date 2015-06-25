@@ -7,6 +7,7 @@
 package banka;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -165,7 +166,28 @@ public class BankaPortImpl implements BankaPort {
 			zaglavlje.setBrojRacuna(parameters.getBrojRacuna());
 			zaglavlje.setDatumNaloga(parameters.getDatum());
 			zaglavlje.setBrojPreseka(parameters.getRadniBrojPreseka());
-			//TODO:
+			BigDecimal prethodnoStanje = new BigDecimal("0");
+			Integer uKorist = 0;
+			BigDecimal ukupnoKorist = new BigDecimal("0");
+			Integer naTeret = 0;
+			BigDecimal ukupnoTeret = new BigDecimal("0");
+			for (Object o : izvod.getStavkePreseka()) {
+				StavkaPreseka sp = (StavkaPreseka) o;
+				if (sp.getRacunDuznika().equals(parameters.getBrojRacuna())) {
+					naTeret++;
+					ukupnoTeret = ukupnoTeret.add(sp.getIznos());
+				} else {
+					uKorist++;
+					ukupnoKorist = ukupnoKorist.add(sp.getIznos());
+				}
+			}
+			BigDecimal novoStanje = prethodnoStanje.add(ukupnoKorist).subtract(ukupnoTeret);
+			zaglavlje.setPrethodnoStanje(prethodnoStanje);
+			zaglavlje.setBrojPromenaUKorist(new BigInteger(uKorist.toString()));
+			zaglavlje.setUkupnoUKorist(ukupnoKorist);
+			zaglavlje.setBrojPromenaNaTeret(new BigInteger(naTeret.toString()));
+			zaglavlje.setUkupnoNaTeret(ukupnoTeret);
+			zaglavlje.setNovoStanje(novoStanje);
 			izvod.setZaglavlje(zaglavlje);
 			return izvod;
 		} else {
