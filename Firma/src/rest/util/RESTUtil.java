@@ -19,6 +19,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 
+import sessionbeans.transaction.FakturaDao;
+import xml.faktura.Faktura;
+
 
 
 
@@ -34,7 +37,12 @@ public class RESTUtil<T> {
 	public static final String REST_URL = "http://localhost:8984/rest/";
 	
 	public static void main(String[] args) throws Exception {
-		createSchema("firma");
+		FakturaDao f = new FakturaDao();
+		FakturaDao.init();
+		Faktura fac = f.findById((long) 1);
+		System.out.println(fac.getZaglavlje().getOznakaValute());
+		
+		
 	}
 	
 	public static int createSchema(String schemaName) throws Exception {

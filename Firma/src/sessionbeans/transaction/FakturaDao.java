@@ -34,9 +34,9 @@ import baza.EntityManagerBaseX;
 @Local(FakturaDaoLocal.class)
 public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoLocal{
 
-	public static final String contextPath = "rs.ac.uns.ftn.xws.entities.payments";
+	public static final String contextPath = "xml.faktura";
 	
-	public static final String schemaName = "invoice";
+	public static final String schemaName = "fakture";
 	
 	public FakturaDao() {
 		super(contextPath, schemaName);
@@ -136,10 +136,13 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 
 	@Override
 	public List<Faktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException {
+		System.out.println("TUUUu");
 		List<Faktura> sveFakture = findAll();
 		List<Faktura> povratna = new ArrayList<Faktura>();
+		System.out.println("Id trazenog partnera: "+partnerId.toString());
 		for (Faktura tf : sveFakture)
 		{
+			System.out.println("Id trazenog dobavljaca: "+tf.getZaglavlje().getPIBDobavljaca());
 			if ( (tf.getZaglavlje().getPIBDobavljaca().equals(partnerId.toString()) )
 					|| (tf.getZaglavlje().getPIBKupca().equals(partnerId.toString())) ) 
 					{
@@ -210,7 +213,7 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		//Zaglavlje 1
 		Zaglavlje z1 = new Zaglavlje();
 		z1.setAdresaDobavljaca("Lopovska_23");
-		z1.setAdresaKupca("RIS");
+		z1.setAdresaKupca("Titova_2");
 		z1.setBrojRacuna(new BigInteger("222222"));
 		z1.setDatumRacuna(date1);
 		z1.setDatumValute(date1);
@@ -224,7 +227,7 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		z1.setUkupanPorez(new BigDecimal("12"));
 		z1.setUkupanRabat(new BigDecimal("6"));
 		z1.setUkupnoRobaIUsluga(new BigDecimal("560"));
-		z1.setUplataNaRacun("333333");
+		z1.setUplataNaRacun("111111");
 		z1.setVrednostRobe(new BigDecimal("555"));
 		z1.setVrednostUsluga(new BigDecimal("5"));
 		
@@ -248,24 +251,24 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		//faktura 1
 		Faktura faktura2 = new Faktura();
 		Zaglavlje z2 = new Zaglavlje();
-		z2.setAdresaDobavljaca("Lopovska_23");
-		z2.setAdresaKupca("RIS");
+		z2.setAdresaDobavljaca("Stekarska_11");
+		z2.setAdresaKupca("Titova_2");
 		z2.setBrojRacuna(new BigInteger("222222"));
-		z2.setDatumRacuna(date1);
-		z2.setDatumValute(date1);
-		z2.setIDPoruke("1");
-		z2.setIznosZaUplatu(new BigDecimal("590"));
-		z2.setNazivDobavljaca("Nekretnine_Propast");
+		z2.setDatumRacuna(date4);
+		z2.setDatumValute(date5);
+		z2.setIDPoruke("5");
+		z2.setIznosZaUplatu(new BigDecimal("999"));
+		z2.setNazivDobavljaca("RIS");
 		z2.setNazivKupca("Bananomancer");
 		z2.setOznakaValute("RSD");
-		z2.setPIBDobavljaca("12");
+		z2.setPIBDobavljaca("14");
 		z2.setPIBKupca("13");
-		z2.setUkupanPorez(new BigDecimal("12"));
-		z2.setUkupanRabat(new BigDecimal("6"));
-		z2.setUkupnoRobaIUsluga(new BigDecimal("560"));
+		z2.setUkupanPorez(new BigDecimal("120"));
+		z2.setUkupanRabat(new BigDecimal("60"));
+		z2.setUkupnoRobaIUsluga(new BigDecimal("890"));
 		z2.setUplataNaRacun("333333");
-		z2.setVrednostRobe(new BigDecimal("555"));
-		z2.setVrednostUsluga(new BigDecimal("5"));
+		z2.setVrednostRobe(new BigDecimal("888"));
+		z2.setVrednostUsluga(new BigDecimal("2"));
 		faktura2.setZaglavlje(z2);
 		
 		val1++;
@@ -285,23 +288,27 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		StavkaFakture s3 = new StavkaFakture();		
 		s3.setIznosRabata(new BigDecimal("3"));
 		s3.setJedinicaMere("m");
-		s3.setJedinicnaCena(new BigDecimal("2"));
-		s3.setKolicina(new BigDecimal("2"));
-		s3.setNazivRobeIliUsluge("banana");
-		s3.setProcenatRabata(new BigDecimal("2"));
+		s3.setJedinicnaCena(new BigDecimal("3"));
+		s3.setKolicina(new BigDecimal("3"));
+		s3.setNazivRobeIliUsluge("krompir");
+		s3.setProcenatRabata(new BigDecimal("3"));
 		s3.setRedniBroj(new BigInteger(""+val1));
-		s3.setUkupanPorez(new BigDecimal("2"));
-		s3.setUmanjenoZaRabat(new BigDecimal("2"));
-		s3.setVrednost(new BigDecimal("2"));
+		s3.setUkupanPorez(new BigDecimal("3"));
+		s3.setUmanjenoZaRabat(new BigDecimal("3"));
+		s3.setVrednost(new BigDecimal("3"));
 		
 		faktura2.getStavkaFakture().add(s2);
 		faktura2.getStavkaFakture().add(s3);
 
 		try {
 			EntityManagerBaseX.createSchema("fakture");
-			EntityManagerBaseX<Faktura, Long> emf =new EntityManagerBaseX<Faktura, Long>("fakture", "xml.project.faktura");
+			EntityManagerBaseX<Faktura, Long> emf =new EntityManagerBaseX<Faktura, Long>("fakture", "xml.faktura");
+			System.out.println("fac1");
 			emf.persist(faktura1, faktura1.getId());
+			System.out.println("fac2");
 			emf.persist(faktura2, faktura2.getId());
+
+			
 		} catch (JAXBException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -309,13 +316,13 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
+	/*	try {
 
-			convertToXML("xml.project.faktura", faktura1);
-			convertToXML("xml.project.faktura", faktura2);
+			convertToXML("xml.faktura", faktura1);
+			convertToXML("xml.faktura", faktura2);
 		} catch (JAXBException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public static void convertToXML(String path, Object classTheIsConverted) throws JAXBException{
@@ -325,7 +332,7 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		if (classTheIsConverted instanceof Faktura) {
 	    	Faktura temp = (Faktura) classTheIsConverted;
 	    	jaxbMarshaller.marshal(temp, System.out);
-		    jaxbMarshaller.marshal(temp, new File("./xml/Faktura"+temp.getId()+".xml"));
+		    jaxbMarshaller.marshal(temp, new File("../xml/Faktura"+temp.getId()+".xml"));
 		}
 	}
 	

@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.w3c.dom.Node;
 
@@ -27,7 +28,7 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 	/*
 	 * Izbaciti u XML/properties konfiguraciju
 	 */
-	public static final String REST_URL = "http://localhost:8080/BaseX75/rest/";
+	public static final String REST_URL = "http://localhost:8984/rest/";
 
 	public static final String BASEX_CONTEXT_PATH = "baza.basex.rest";
 	
@@ -77,8 +78,10 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 	public T find(ID resourceId) throws IOException, JAXBException {
 		T entity = null;
 		
+		System.out.println(REST_URL + schemaName + "/" + resourceId);
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
 		conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(RequestMethod.GET);
 		
 		int responseCode = conn.getResponseCode();
 		String message = conn.getResponseMessage();
