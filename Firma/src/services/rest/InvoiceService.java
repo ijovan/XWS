@@ -21,14 +21,14 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBException;
 
 import sessionbeans.transaction.FakturaDaoLocal;
-import xml.faktura.TFaktura;
-import xml.faktura.TFaktura.StavkaFakture;
+import xml.faktura.Faktura;
+import xml.faktura.Faktura.StavkaFakture;
 
 
 @Path("/partneri")
 public class InvoiceService {
 
-	//private static Logger log = Logger.getLogger(TFaktura.class);
+	//private static Logger log = Logger.getLogger(Faktura.class);
 	private String[] p= {"12","13","14"};	
 
 	@EJB
@@ -47,14 +47,14 @@ public class InvoiceService {
 	@Path("/{id}/fakture/") 
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sendInvoice(@PathParam("id") String id, TFaktura tf) throws JAXBException, IOException{
+	public Response sendInvoice(@PathParam("id") String id, Faktura tf) throws JAXBException, IOException{
 		System.out.println("USAO U 1");
 		ResponseBuilder rb;
 		//provera da li je poslovni parner kompanije
 		if(isPartner(id)){
 			//provera da li je faktura ispravna
 			if(!fakturaDao.validateInvoice(tf)){
-				TFaktura save= fakturaDao.persist(tf);
+				Faktura save= fakturaDao.persist(tf);
 				rb = Response.created(URI.create("/partneri/"+id+"/fakture/"+save.getId()));
 			}else{
 				rb = Response.status(Status.BAD_REQUEST);
@@ -98,9 +98,9 @@ public class InvoiceService {
 		System.out.println("USAO U 3");
 		ResponseBuilder rb = null;
 		if(isPartner(id)){
-			List<TFaktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
+			List<Faktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
 			rb = Response.status(Status.NOT_FOUND);//stavim da nije pronadjen u slucaju prazne liste
-			for (TFaktura tf : supplierInvoices){
+			for (Faktura tf : supplierInvoices){
 				if(tf.getId() == idi) {
 					rb = Response.ok(tf);
 					break; //kad nadje kraj da ga ne pregazi
@@ -125,7 +125,7 @@ public class InvoiceService {
 		System.out.println("USAO U 4");
 		ResponseBuilder rb;
 		if(isPartner(id)){
-			List<TFaktura.StavkaFakture> povratna = fakturaDao.getInvoiceItemsForInvoice(idi, Long.parseLong(id));
+			List<Faktura.StavkaFakture> povratna = fakturaDao.getInvoiceItemsForInvoice(idi, Long.parseLong(id));
 			if( povratna != null){
 				rb = Response.ok(povratna);
 			}else{
@@ -152,7 +152,7 @@ public class InvoiceService {
 	public Response createInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi, StavkaFakture sf) throws URISyntaxException{
 		System.out.println("USAO U 5");
 		ResponseBuilder rb=null;
-		TFaktura result = null;		
+		Faktura result = null;		
 		if(isPartner(id)){
 			if (sf.isValid())
 			{
@@ -229,7 +229,7 @@ public class InvoiceService {
 	public Response updateInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr, StavkaFakture sf){
 		System.out.println("USAO U 7");
 		ResponseBuilder rb =null;
-		TFaktura res = null;
+		Faktura res = null;
 		try {
 			if(isPartner(id)){
 				if (sf.isValid())
@@ -278,7 +278,7 @@ public class InvoiceService {
 	public Response deleteInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi,@PathParam("r_br") long rbr){
 		System.out.println("USAO U 8");
 		ResponseBuilder rb=null;
-		TFaktura res ;
+		Faktura res ;
 		try{
 			if(isPartner(id)){
 				res = fakturaDao.findById(idi);

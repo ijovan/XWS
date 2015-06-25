@@ -3,7 +3,8 @@
     xmlns:gl="http://xml/globals"
     xmlns="http://xml/faktura">
     <xs:import namespace="http://xml/globals" schemaLocation="globals.xsd"/>
-        <xs:complexType name="TFaktura">
+    <xs:element name="Faktura">
+        <xs:complexType>
             <xs:sequence>
                 <xs:element name="Zaglavlje">
                     <xs:complexType>
@@ -217,4 +218,5 @@
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+    </xs:element>
 </xs:schema>

@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * 
  */
 @WebService(targetNamespace = "http://banka", name = "bankaPort")
-@XmlSeeAlso({xml.mt900.ObjectFactory.class, xml.faktura.ObjectFactory.class, xml.globals.ObjectFactory.class, xml.mt910.ObjectFactory.class, xml.mt102.ObjectFactory.class, ObjectFactory.class, xml.mt103.ObjectFactory.class})
+@XmlSeeAlso({xml.mt900.ObjectFactory.class, xml.globals.ObjectFactory.class, xml.mt910.ObjectFactory.class, xml.mt102.ObjectFactory.class, ObjectFactory.class, xml.mt103.ObjectFactory.class})
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public interface BankaPort {
 

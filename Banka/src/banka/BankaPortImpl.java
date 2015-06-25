@@ -29,7 +29,7 @@ import xml.izvod.TIzvod.Zaglavlje;
 import xml.mt102.Placanje;
 import xml.mt102.TMT102;
 import xml.mt103.TMT103;
-import xml.racunfirme.TRacunFirme;
+import xml.racunfirme.RacunFirme;
 import centralnabanka.CentralnaBankaPort;
 
 /**
@@ -50,7 +50,7 @@ public class BankaPortImpl implements BankaPort {
 
 	private static final TBanka banka = new TBanka("012", "000000000000000000", "AAAAAAAA");
 	private static CentralnaBankaPort centralnaBanka;
-	private static HashMap<String, TRacunFirme> racuni = new HashMap<String, TRacunFirme>();
+	private static HashMap<String, RacunFirme> racuni = new HashMap<String, RacunFirme>();
 	private static HashMap<String, TBanka> banke = new HashMap<String, TBanka>();
 
 	public static void main(String[] args) {
@@ -70,8 +70,8 @@ public class BankaPortImpl implements BankaPort {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		racuni.put("012000000000000000", new TRacunFirme("012000000000000000", new BigDecimal("300000")));
-		racuni.put("012000000000000001", new TRacunFirme("012000000000000001", new BigDecimal("0")));
+		racuni.put("012000000000000000", new RacunFirme("012000000000000000", new BigDecimal("300000")));
+		racuni.put("012000000000000001", new RacunFirme("012000000000000001", new BigDecimal("0")));
 		banke.put("345", new TBanka("345", "000000000000000001", "BBBBBBBB"));
 		banke.put("678", new TBanka("012", "000000000000000002", "CCCCCCCC"));
 		System.out.println("Bank init done.");
@@ -140,7 +140,7 @@ public class BankaPortImpl implements BankaPort {
 //			throw new RuntimeException(ex);
 //		}
 		String brojRacuna = parameters.getBrojRacuna();
-		TRacunFirme racunFirme = racuni.get(brojRacuna);
+		RacunFirme racunFirme = racuni.get(brojRacuna);
 		if (racunFirme == null) {
 			return null;
 		}
@@ -208,11 +208,11 @@ public class BankaPortImpl implements BankaPort {
 		//			ex.printStackTrace();
 		//			throw new RuntimeException(ex);
 		//		}
-		racuni.put("345000000000000000", new TRacunFirme("345000000000000000", new BigDecimal("300000")));//////
-		racuni.put("345000000000000001", new TRacunFirme("345000000000000001", new BigDecimal("0")));/////
+		racuni.put("345000000000000000", new RacunFirme("345000000000000000", new BigDecimal("300000")));//////
+		racuni.put("345000000000000001", new RacunFirme("345000000000000001", new BigDecimal("0")));/////
 		String racunPrimaoca = parameters.getPrimalacPoverilac().getRacun();
 		if (racuni.containsKey(racunPrimaoca)) {
-			TRacunFirme trenutno = racuni.get(racunPrimaoca);
+			RacunFirme trenutno = racuni.get(racunPrimaoca);
 			trenutno.setStanje(trenutno.getStanje().add(parameters.getIznos()));
 			racuni.put(racunPrimaoca, trenutno);
 		}
@@ -398,8 +398,8 @@ public class BankaPortImpl implements BankaPort {
 //			ex.printStackTrace();
 //			throw new RuntimeException(ex);
 //		}		
-		racuni.put("345000000000000000", new TRacunFirme("345000000000000000", new BigDecimal("300000")));//////
-		racuni.put("345000000000000001", new TRacunFirme("345000000000000001", new BigDecimal("0")));/////
+		racuni.put("345000000000000000", new RacunFirme("345000000000000000", new BigDecimal("300000")));//////
+		racuni.put("345000000000000001", new RacunFirme("345000000000000001", new BigDecimal("0")));/////
 		for (Placanje p : parameters.getPlacanja()) {
 			String racunPrimaoca = p.getPrimalacPoverilac().getRacun();
 			if (racuni.containsKey(racunPrimaoca)) {

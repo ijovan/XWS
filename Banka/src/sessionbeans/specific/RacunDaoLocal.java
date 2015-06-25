@@ -7,10 +7,10 @@ import javax.xml.bind.JAXBException;
 
 import sessionbeans.common.GenericDaoLocal;
 import xml.izvod.StavkaPreseka;
-import xml.racunfirme.TRacunFirme;
+import xml.racunfirme.RacunFirme;
 
 
-public interface RacunDaoLocal extends GenericDaoLocal< TRacunFirme , String >{
+public interface RacunDaoLocal extends GenericDaoLocal< RacunFirme , String >{
 
 /*	public StavkaPreseka findStavkaInRacun(Long racunId, Long stavkaId) throws IOException, JAXBException;
 	

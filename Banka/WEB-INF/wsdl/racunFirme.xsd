@@ -6,19 +6,21 @@
 
     <xs:import namespace="http://xml/izvod" schemaLocation="izvod.xsd"/>
 
-    <xs:complexType name="TRacunFirme">
-        <xs:sequence>
-            <xs:element name="broj" type="xs:string"/>
-            <xs:element name="stanje">
-                <xs:simpleType>
-                    <xs:restriction base="xs:decimal">
-                        <xs:totalDigits value="17"/>
-                        <xs:fractionDigits value="2"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="stavke" type="iz:Stavka_preseka" maxOccurs="unbounded">
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="RacunFirme">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="broj" type="xs:string"/>
+                <xs:element name="stanje">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:decimal">
+                            <xs:totalDigits value="17"/>
+                            <xs:fractionDigits value="2"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="stavke" type="iz:Stavka_preseka" maxOccurs="unbounded">
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

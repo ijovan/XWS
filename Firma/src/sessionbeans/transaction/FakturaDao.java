@@ -18,12 +18,12 @@ import javax.xml.validation.SchemaFactory;
 import org.xml.sax.SAXException;
 
 import sessionbeans.common.GenericDao;
-import xml.faktura.TFaktura;
-import xml.faktura.TFaktura.StavkaFakture;
+import xml.faktura.Faktura;
+import xml.faktura.Faktura.StavkaFakture;
 
 @Stateless
 @Local(FakturaDaoLocal.class)
-public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDaoLocal{
+public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoLocal{
 
 	public static final String contextPath = "rs.ac.uns.ftn.xws.entities.payments";
 	
@@ -33,24 +33,24 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 		super(contextPath, schemaName);
 	}
 
-	public TFaktura.StavkaFakture findItemInInvoice(Long invoiceId, Long itemId) throws IOException, JAXBException {
-		TFaktura invoice = findById(invoiceId);
+	public Faktura.StavkaFakture findItemInInvoice(Long invoiceId, Long itemId) throws IOException, JAXBException {
+		Faktura invoice = findById(invoiceId);
 		
-		if (invoice instanceof TFaktura) 
-			for (TFaktura.StavkaFakture item : invoice.getStavkaFakture())
+		if (invoice instanceof Faktura) 
+			for (Faktura.StavkaFakture item : invoice.getStavkaFakture())
 				if (item.getRedniBroj().equals(itemId))
 					return item;
 				
 		return null;
 	}
 
-	public TFaktura removeItemFromInvoice(Long invoiceId, Long itemId) throws IOException, JAXBException {
-		TFaktura invoice = findById(invoiceId);
+	public Faktura removeItemFromInvoice(Long invoiceId, Long itemId) throws IOException, JAXBException {
+		Faktura invoice = findById(invoiceId);
 		boolean nadjena = false;
 		
-		if (invoice instanceof TFaktura) 
-			for (Iterator<TFaktura.StavkaFakture> iter = invoice.getStavkaFakture().listIterator(); iter.hasNext(); ) {
-				TFaktura.StavkaFakture item = iter.next();
+		if (invoice instanceof Faktura) 
+			for (Iterator<Faktura.StavkaFakture> iter = invoice.getStavkaFakture().listIterator(); iter.hasNext(); ) {
+				Faktura.StavkaFakture item = iter.next();
 			    if (item.getRedniBroj().equals(itemId)) {
 			        iter.remove();
 			        nadjena = true;
@@ -63,28 +63,28 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 			return null;
 	}
 
-	public TFaktura createInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException {
-		TFaktura invoice = findById(invoiceId);
+	public Faktura createInvoiceItem(Long invoiceId, Faktura.StavkaFakture item) throws IOException, JAXBException {
+		Faktura invoice = findById(invoiceId);
 		
 		if (invoice == null)
 		{
 			return null;
 		}
-		else if (invoice instanceof TFaktura) { 
+		else if (invoice instanceof Faktura) { 
 			invoice.getStavkaFakture().add(item);
 		}
 		
 		return merge(invoice, invoiceId);
 	}
 	
-	public TFaktura updateInvoiceItem(Long invoiceId, TFaktura.StavkaFakture item) throws IOException, JAXBException {
-		TFaktura invoice = findById(invoiceId);
+	public Faktura updateInvoiceItem(Long invoiceId, Faktura.StavkaFakture item) throws IOException, JAXBException {
+		Faktura invoice = findById(invoiceId);
 		boolean nadjena = false;
-		//List<TFaktura.StavkaFakture> newList = new ArrayList<TFaktura.StavkaFakture>();	MOZDA BABRA PO KOLEKCIJI KROZ KOJU ITERIRA
+		//List<Faktura.StavkaFakture> newList = new ArrayList<Faktura.StavkaFakture>();	MOZDA BABRA PO KOLEKCIJI KROZ KOJU ITERIRA
 		
-		if (invoice instanceof TFaktura) { 
-			for (Iterator<TFaktura.StavkaFakture> iter = invoice.getStavkaFakture().listIterator(); iter.hasNext(); ) {
-				TFaktura.StavkaFakture invoiceItem = iter.next();
+		if (invoice instanceof Faktura) { 
+			for (Iterator<Faktura.StavkaFakture> iter = invoice.getStavkaFakture().listIterator(); iter.hasNext(); ) {
+				Faktura.StavkaFakture invoiceItem = iter.next();
 			    if (invoiceItem.getRedniBroj().equals(item.getRedniBroj())) {
 			        iter.remove();
 			        nadjena = true;
@@ -100,7 +100,7 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 
 	
 	@Override
-	public boolean validateInvoice(TFaktura invoice){
+	public boolean validateInvoice(Faktura invoice){
 		JAXBContext jaxbContext;
 		try {
 			jaxbContext = JAXBContext.newInstance("xml.project.faktura");
@@ -126,10 +126,10 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 	}
 
 	@Override
-	public List<TFaktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException {
-		List<TFaktura> sveFakture = findAll();
-		List<TFaktura> povratna = new ArrayList<TFaktura>();
-		for (TFaktura tf : sveFakture)
+	public List<Faktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException {
+		List<Faktura> sveFakture = findAll();
+		List<Faktura> povratna = new ArrayList<Faktura>();
+		for (Faktura tf : sveFakture)
 		{
 			if ( (tf.getZaglavlje().getPIBDobavljaca().equals(partnerId.toString()) )
 					|| (tf.getZaglavlje().getPIBKupca().equals(partnerId.toString())) ) 
@@ -143,8 +143,8 @@ public class FakturaDao extends GenericDao<TFaktura, Long> implements FakturaDao
 
 	@Override
 	public List<StavkaFakture> getInvoiceItemsForInvoice(Long invoiceId, Long partnerId) throws IOException, JAXBException {
-		 List<TFaktura> listaPartnerskih = getInvoicesForPartner(partnerId);
-		 for (TFaktura tf : listaPartnerskih)
+		 List<Faktura> listaPartnerskih = getInvoicesForPartner(partnerId);
+		 for (Faktura tf : listaPartnerskih)
 		 {
 			 if ( tf.getId() == invoiceId)
 				 return tf.getStavkaFakture();

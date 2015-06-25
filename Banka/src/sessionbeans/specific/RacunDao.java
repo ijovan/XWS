@@ -9,11 +9,11 @@ import javax.xml.bind.JAXBException;
 
 import sessionbeans.common.GenericDao;
 import xml.izvod.StavkaPreseka;
-import xml.racunfirme.TRacunFirme;
+import xml.racunfirme.RacunFirme;
 
 @Stateless
 @Local(RacunDaoLocal.class)
-public class RacunDao extends GenericDao<TRacunFirme, String> implements RacunDaoLocal{
+public class RacunDao extends GenericDao<RacunFirme, String> implements RacunDaoLocal{
 
 	public RacunDao(String contextPath, String schemaName) {
 		super(contextPath, schemaName);
@@ -30,8 +30,8 @@ public class RacunDao extends GenericDao<TRacunFirme, String> implements RacunDa
 
 	@Override
 	public List<StavkaPreseka> getStavkeForRacunId(String racunId) throws IOException, JAXBException {
-		List<TRacunFirme> racuni = findAll();
-		for (TRacunFirme r : racuni)
+		List<RacunFirme> racuni = findAll();
+		for (RacunFirme r : racuni)
 		{
 			if (r.getBroj().equals(racunId) )
 			{
@@ -45,8 +45,8 @@ public class RacunDao extends GenericDao<TRacunFirme, String> implements RacunDa
 	@Override
 	public void setStavkeForRacunId(String racunId, List<StavkaPreseka> stavke)	throws IOException, JAXBException {
 		
-		List<TRacunFirme> racuni = findAll();
-		for (TRacunFirme r : racuni)
+		List<RacunFirme> racuni = findAll();
+		for (RacunFirme r : racuni)
 		{
 			if (r.getBroj().equals(racunId) )
 			{
