@@ -9,6 +9,7 @@ package banka;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -22,6 +23,8 @@ import javax.xml.ws.Service;
 import xml.banka.TBanka;
 import xml.globals.TFirma;
 import xml.izvod.StavkaPreseka;
+import xml.izvod.TIzvod;
+import xml.izvod.TIzvod.Zaglavlje;
 import xml.mt102.Placanje;
 import xml.mt102.TMT102;
 import xml.mt103.TMT103;
@@ -99,7 +102,25 @@ public class BankaPortImpl implements BankaPort {
 		mt102.setSifraValute("RSD");
 		mt102.setDatumValute(date);
 		mt102.setDatum(date);
-		centralnaBanka.mt102(mt102);
+		if (centralnaBanka.mt102(mt102)) {
+			for (Placanje p : mt102.getPlacanja()) {
+				StavkaPreseka stavka = new StavkaPreseka();
+				stavka.setDuznikNalogodavac(p.getDuznikNalogodavac().getNaziv());
+				stavka.setSvrhaPlacanja(p.getSvrhaPlacanja());
+				stavka.setPrimalacPoverilac(p.getPrimalacPoverilac().getNaziv());
+				stavka.setDatumNaloga(p.getDatumNaloga());
+				stavka.setDatumValute(p.getDatumValute());
+				stavka.setRacunDuznika(p.getDuznikNalogodavac().getRacun());
+				stavka.setModelZaduzenja(p.getDuznikNalogodavac().getModel());
+				stavka.setPozivNaBrojZaduzenja(p.getDuznikNalogodavac().getPozivNaBroj());
+				stavka.setRacunPoverioca(p.getPrimalacPoverilac().getRacun());
+				stavka.setModelOdobrenja(p.getPrimalacPoverilac().getModel());
+				stavka.setPozivNaBrojOdobrenja(p.getPrimalacPoverilac().getPozivNaBroj());
+				stavka.setIznos(p.getIznos());
+				stavka.setSmer("");/////
+				racuni.get(stavka.getRacunDuznika()).getStavke().add(stavka);
+			}
+		}
 	}
 
 	private static final Logger LOG = Logger.getLogger(BankaPortImpl.class.getName());
@@ -110,12 +131,45 @@ public class BankaPortImpl implements BankaPort {
 	public xml.izvod.TIzvod zahtevZaIzvod(xml.zahtevzaizvod.TZahtevZaIzvod parameters) { 
 		LOG.info("Executing operation zahtevZaIzvod");
 		System.out.println(parameters);
-		try {
-			xml.izvod.TIzvod _return = new xml.izvod.TIzvod();
-			return _return;
-		} catch (java.lang.Exception ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
+//		try {
+//			xml.izvod.TIzvod _return = new xml.izvod.TIzvod();
+//			return _return;
+//		} catch (java.lang.Exception ex) {
+//			ex.printStackTrace();
+//			throw new RuntimeException(ex);
+//		}
+		String brojRacuna = parameters.getBrojRacuna();
+		TRacunFirme racunFirme = racuni.get(brojRacuna);
+		if (racunFirme == null) {
+			return null;
+		}
+		ArrayList<StavkaPreseka> stavke = new ArrayList<StavkaPreseka>();
+		for (StavkaPreseka sp : racunFirme.getStavke()) {
+			if (sp.getDatumNaloga().equals(parameters.getDatum())) {
+				stavke.add(sp);
+			}
+		}
+		int rbPreseka = parameters.getRadniBrojPreseka().intValue();
+		if (rbPreseka * 5 <= stavke.size()) {
+			TIzvod izvod = new TIzvod();
+			int curr = rbPreseka * 5;
+			while (true) {
+				try {
+					StavkaPreseka sp = stavke.get(curr++);
+					izvod.getStavkePreseka().add(sp);
+				} catch (IndexOutOfBoundsException e) {
+					break;
+				}
+			}
+			Zaglavlje zaglavlje = new Zaglavlje();
+			zaglavlje.setBrojRacuna(parameters.getBrojRacuna());
+			zaglavlje.setDatumNaloga(parameters.getDatum());
+			zaglavlje.setBrojPreseka(parameters.getRadniBrojPreseka());
+			//TODO:
+			izvod.setZaglavlje(zaglavlje);
+			return izvod;
+		} else {
+			return null;
 		}
 	}
 
@@ -241,6 +295,21 @@ public class BankaPortImpl implements BankaPort {
 				nalogodavac = parameters.getRacunDuznika();
 				BigDecimal staroNalogodavac = racuni.get(nalogodavac).getStanje();
 				racuni.get(nalogodavac).setStanje(staroNalogodavac.subtract(parameters.getIznos()));
+				StavkaPreseka stavka = new StavkaPreseka();
+				stavka.setDuznikNalogodavac(mt103.getDuznikNalogodavac().getNaziv());
+				stavka.setSvrhaPlacanja(mt103.getSvrhaPlacanja());
+				stavka.setPrimalacPoverilac(mt103.getPrimalacPoverilac().getNaziv());
+				stavka.setDatumNaloga(mt103.getDatumNaloga());
+				stavka.setDatumValute(mt103.getDatumValute());
+				stavka.setRacunDuznika(mt103.getDuznikNalogodavac().getRacun());
+				stavka.setModelZaduzenja(mt103.getDuznikNalogodavac().getModel());
+				stavka.setPozivNaBrojZaduzenja(mt103.getDuznikNalogodavac().getPozivNaBroj());
+				stavka.setRacunPoverioca(mt103.getPrimalacPoverilac().getRacun());
+				stavka.setModelOdobrenja(mt103.getPrimalacPoverilac().getModel());
+				stavka.setPozivNaBrojOdobrenja(mt103.getPrimalacPoverilac().getPozivNaBroj());
+				stavka.setIznos(mt103.getIznos());
+				stavka.setSmer("");/////
+				racuni.get(stavka.getRacunDuznika()).getStavke().add(stavka);
 			}
 		} else {
 			System.out.println("Globalni transfer; ne-RTGS.");
@@ -278,7 +347,7 @@ public class BankaPortImpl implements BankaPort {
 		}
 		return true;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see banka.BankaPort#mt910(xml.mt910.TMT910  parameters )*
 	 */
