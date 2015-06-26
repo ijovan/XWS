@@ -9,6 +9,7 @@
 package xml.mt103;
 
 import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -17,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import sessionbeans.common.Identifiable;
 import xml.globals.TFirma;
 
 
@@ -86,7 +89,7 @@ import xml.globals.TFirma;
     "sifraValute"
 })
 @XmlRootElement(name = "MT103")
-public class MT103 {
+public class MT103 extends Identifiable {
 
     @XmlElement(name = "uID", required = true)
     protected String uid;

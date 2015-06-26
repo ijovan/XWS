@@ -77,7 +77,7 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 	public T find(ID resourceId) throws IOException, JAXBException {
 		T entity = null;
 		
-		System.out.println(REST_URL + schemaName + "/" + resourceId);
+		//System.out.println(REST_URL + schemaName + "/" + resourceId);
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(RequestMethod.GET);
@@ -87,8 +87,11 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 
 		System.out.println("\n* HTTP response: " + responseCode + " (" + message + ')');
 		
-		if (responseCode == HttpURLConnection.HTTP_OK) 
-			return (T) unmarshaller.unmarshal(conn.getInputStream());
+		if (responseCode == HttpURLConnection.HTTP_OK)
+		{
+			entity = (T) unmarshaller.unmarshal(conn.getInputStream());
+			
+		} 
 		
 		conn.disconnect();
 		return entity;
