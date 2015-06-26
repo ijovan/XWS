@@ -21,6 +21,7 @@
                 <xs:element name="stavke" type="iz:Stavka_preseka" maxOccurs="unbounded">
                 </xs:element>
             </xs:sequence>
+            <xs:attribute name="id" type="xs:long"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

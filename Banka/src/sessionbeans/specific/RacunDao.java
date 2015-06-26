@@ -13,7 +13,7 @@ import xml.racunfirme.RacunFirme;
 
 @Stateless
 @Local(RacunDaoLocal.class)
-public class RacunDao extends GenericDao<RacunFirme, String> implements RacunDaoLocal{
+public class RacunDao extends GenericDao<RacunFirme, Long> implements RacunDaoLocal{
 
 	public RacunDao(String contextPath, String schemaName) {
 		super(contextPath, schemaName);
@@ -29,11 +29,11 @@ public class RacunDao extends GenericDao<RacunFirme, String> implements RacunDao
 	}
 
 	@Override
-	public List<StavkaPreseka> getStavkeForRacunId(String racunId) throws IOException, JAXBException {
+	public List<StavkaPreseka> getStavkeForRacunId(Long racunId) throws IOException, JAXBException {
 		List<RacunFirme> racuni = findAll();
 		for (RacunFirme r : racuni)
 		{
-			if (r.getBroj().equals(racunId) )
+			if (r.getId().equals(racunId) )
 			{
 				return r.getStavke();
 			}
@@ -43,12 +43,12 @@ public class RacunDao extends GenericDao<RacunFirme, String> implements RacunDao
 	}
 
 	@Override
-	public void setStavkeForRacunId(String racunId, List<StavkaPreseka> stavke)	throws IOException, JAXBException {
+	public void setStavkeForRacunId(Long racunId, List<StavkaPreseka> stavke)	throws IOException, JAXBException {
 		
 		List<RacunFirme> racuni = findAll();
 		for (RacunFirme r : racuni)
 		{
-			if (r.getBroj().equals(racunId) )
+			if (r.getId().equals(racunId) )
 			{
 				List<StavkaPreseka> stareStavke = r.getStavke();
 				stareStavke.clear();

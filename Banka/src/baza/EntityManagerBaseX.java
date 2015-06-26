@@ -26,7 +26,7 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 	/*
 	 * Izbaciti u XML/properties konfiguraciju
 	 */
-	public static final String REST_URL = "http://localhost:8984/rest/";
+	public static final String REST_URL = "http://localhost:8080/BaseX75/rest/"; //8984
 
 	public static final String BASEX_CONTEXT_PATH = "baza.basex.rest";
 	
@@ -64,6 +64,11 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
 		conn = (HttpURLConnection) url.openConnection();
 		
+		String userpass = "admin:admin";
+		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+		conn.setRequestProperty ("Authorization", basicAuth);
+		conn.connect();
+		
 		int responseCode = conn.getResponseCode();
 		String message = conn.getResponseMessage();
 
@@ -83,7 +88,7 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		
 		StringBuilder builder = new StringBuilder(REST_URL);
 		builder.append(schemaName);
-		builder.append("?query=collection('invoice')");
+		builder.append("?query=collection('" + schemaName + "')");
 		builder.append("&wrap=yes");
 
 		url = new URL(builder.substring(0));

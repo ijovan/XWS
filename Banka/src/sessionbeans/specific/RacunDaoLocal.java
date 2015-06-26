@@ -10,7 +10,7 @@ import xml.izvod.StavkaPreseka;
 import xml.racunfirme.RacunFirme;
 
 
-public interface RacunDaoLocal extends GenericDaoLocal< RacunFirme , String >{
+public interface RacunDaoLocal extends GenericDaoLocal< RacunFirme , Long >{
 
 /*	public StavkaPreseka findStavkaInRacun(Long racunId, Long stavkaId) throws IOException, JAXBException;
 	
@@ -23,9 +23,9 @@ public interface RacunDaoLocal extends GenericDaoLocal< RacunFirme , String >{
 	public List<TFaktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException;
 	*/
 	
-	public List<StavkaPreseka> getStavkeForRacunId(String racunId) throws IOException, JAXBException;
+	public List<StavkaPreseka> getStavkeForRacunId(Long racunId) throws IOException, JAXBException;
 	
-	public void setStavkeForRacunId(String racunId,  List<StavkaPreseka> stavke) throws IOException, JAXBException;
+	public void setStavkeForRacunId(Long racunId,  List<StavkaPreseka> stavke) throws IOException, JAXBException;
 	
 	
 }
