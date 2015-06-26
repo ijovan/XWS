@@ -3,9 +3,10 @@
     xmlns:gl="http://xml/globals" targetNamespace="http://xml/mt103"
     xmlns="http://xml/mt103">
     <xs:import namespace="http://xml/globals" schemaLocation="globals.xsd"/>
-        <xs:complexType name="TMT103">
+    <xs:element name="MT103">
+        <xs:complexType>
             <xs:sequence>
-                <xs:element name="ID">
+                <xs:element name="uID">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:maxLength value="50"/>
@@ -37,5 +38,7 @@
                 </xs:element>
                 <xs:element name="sifraValute" type="gl:TOznakaValute"> </xs:element>
             </xs:sequence>
+            <xs:attribute name="id" type="xs:long"/>
         </xs:complexType>
+    </xs:element>
 </xs:schema>

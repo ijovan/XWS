@@ -5,9 +5,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
+
 import xml.izvod.TIzvod;
-import xml.mt102.TMT102;
-import xml.mt103.TMT103;
+import xml.mt102.MT102;
+import xml.mt103.MT103;
 import xml.mt900.TMT900;
 import xml.mt910.TMT910;
 import xml.nalogzaplacanje.TNalogZaPlacanje;
@@ -48,12 +49,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TMT103 }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link MT103 }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://banka", name = "mt103Request")
-    public JAXBElement<TMT103> createMt103Request(TMT103 value) {
-        return new JAXBElement<TMT103>(_Mt103Request_QNAME, TMT103 .class, null, value);
+    public JAXBElement<MT103> createMt103Request(MT103 value) {
+        return new JAXBElement<MT103>(_Mt103Request_QNAME, MT103 .class, null, value);
     }
 
     /**
@@ -115,8 +116,8 @@ public class ObjectFactory {
      * 
      */
     @XmlElementDecl(namespace = "http://banka", name = "mt102Request")
-    public JAXBElement<TMT102> createMt102Request(TMT102 value) {
-        return new JAXBElement<TMT102>(_Mt102Request_QNAME, TMT102 .class, null, value);
+    public JAXBElement<MT102> createMt102Request(MT102 value) {
+        return new JAXBElement<MT102>(_Mt102Request_QNAME, MT102 .class, null, value);
     }
 
 }

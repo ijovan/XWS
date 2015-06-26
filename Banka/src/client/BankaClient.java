@@ -5,7 +5,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
-import xml.mt103.TMT103;
+import xml.mt103.MT103;
 import centralnabanka.CentralnaBankaPort;
 
 public class BankaClient {
@@ -20,7 +20,7 @@ public class BankaClient {
 			
 			CentralnaBankaPort banka = service.getPort(portName, CentralnaBankaPort.class); 
 			
-			TMT103 mt103 = new TMT103();
+			MT103 mt103 = new MT103();
 			banka.mt103(mt103);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

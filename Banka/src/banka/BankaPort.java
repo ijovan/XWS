@@ -29,7 +29,7 @@ public interface BankaPort {
     @WebMethod
     public boolean mt103(
         @WebParam(partName = "parameters", name = "mt103Request", targetNamespace = "http://banka")
-        xml.mt103.TMT103 parameters
+        xml.mt103.MT103 parameters
     );
 
     @WebResult(name = "boolean", targetNamespace = "http://banka", partName = "parameters")
@@ -57,6 +57,6 @@ public interface BankaPort {
     @WebMethod
     public boolean mt102(
         @WebParam(partName = "parameters", name = "mt102Request", targetNamespace = "http://banka")
-        xml.mt102.TMT102 parameters
+        xml.mt102.MT102 parameters
     );
 }

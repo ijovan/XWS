@@ -3,33 +3,36 @@
     xmlns:gl="http://xml/globals" targetNamespace="http://xml/mt102"
     xmlns="http://xml/mt102">
     <xs:import namespace="http://xml/globals" schemaLocation="globals.xsd"/>
-    <xs:complexType name="TMT102">
-        <xs:sequence>
-            <xs:element name="ID">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:maxLength value="50"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="SWIFT_Duznika" type="gl:TSwiftCode"> </xs:element>
-            <xs:element name="ObrRacunBankeDuznika" type="gl:TOznakaRacuna"> </xs:element>
-            <xs:element name="SWIFT_Poverioca" type="gl:TSwiftCode"> </xs:element>
-            <xs:element name="ObrRacunBankePoverioca" type="gl:TOznakaRacuna"> </xs:element>
-            <xs:element name="UkupanIznos">
-                <xs:simpleType>
-                    <xs:restriction base="xs:decimal">
-                        <xs:totalDigits value="15"/>
-                        <xs:fractionDigits value="2"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="sifraValute" type="gl:TOznakaValute"> </xs:element>
-            <xs:element name="DatumValute" type="xs:date"/>
-            <xs:element name="Datum" type="xs:date"/>
-            <xs:element name="Placanja" type="Placanje" minOccurs="1" maxOccurs="unbounded"></xs:element>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="MT102">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="uID">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="50"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="SWIFT_Duznika" type="gl:TSwiftCode"> </xs:element>
+                <xs:element name="ObrRacunBankeDuznika" type="gl:TOznakaRacuna"> </xs:element>
+                <xs:element name="SWIFT_Poverioca" type="gl:TSwiftCode"> </xs:element>
+                <xs:element name="ObrRacunBankePoverioca" type="gl:TOznakaRacuna"> </xs:element>
+                <xs:element name="UkupanIznos">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:decimal">
+                            <xs:totalDigits value="15"/>
+                            <xs:fractionDigits value="2"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="sifraValute" type="gl:TOznakaValute"> </xs:element>
+                <xs:element name="DatumValute" type="xs:date"/>
+                <xs:element name="Datum" type="xs:date"/>
+                <xs:element name="Placanja" type="Placanje" minOccurs="1" maxOccurs="unbounded"></xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:long"/>
+        </xs:complexType>
+    </xs:element>
     <xs:complexType name="Placanje">
         <xs:sequence>
             <xs:element name="IDNalogaZaPlacanje">

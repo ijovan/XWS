@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import xml.mt102.MT102;
 import xml.mt102.Placanje;
-import xml.mt102.TMT102;
 import xml.mt900.TMT900;
 import xml.mt910.TMT910;
 import xml.racunbanke.RacunBanke;
@@ -44,7 +44,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
     private static HashMap<String, RacunBanke> racuniBanaka = new HashMap<String, RacunBanke>();
 	private static QName serviceName = new QName("http://banka", "bankaService");
 	private static QName portName = new QName("http://banka", "bankaPort");
-	private static ArrayList<TMT102> mt102s = new ArrayList<TMT102>();
+	private static ArrayList<MT102> mt102s = new ArrayList<MT102>();
     
 	private static void init() {
 		racuniBanaka.put("000000000000000000", new RacunBanke("AAAAAAAA", "000000000000000000", new BigDecimal(10000000)));
@@ -52,7 +52,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 	}
 	
 	public static void main(String[] args) {
-		for (TMT102 mt102 : mt102s) {
+		for (MT102 mt102 : mt102s) {
 			BigDecimal suma = new BigDecimal("0");
 			for (Placanje p : mt102.getPlacanja()) {
 				suma = suma.add(p.getIznos());
@@ -78,7 +78,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 					mt900.setID("");/////
 					mt900.setSWIFTDuznika(bankaDuznika.getSwift());
 					mt900.setObrRacunBankeDuznika(bankaDuznika.getObracunskiRacun());
-					mt900.setIDNalogPoruka(mt102.getID());
+					mt900.setIDNalogPoruka(mt102.getUID());
 					mt900.setDatumValute(mt102.getDatumValute());
 					mt900.setIznos(suma);
 					mt900.setSifraValute(mt102.getSifraValute());
@@ -88,7 +88,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 					mt910.setID("");/////
 					mt910.setSWIFTPoverioca(bankaPoverioca.getSwift());
 					mt910.setObrRacunBankePoverioca(bankaPoverioca.getObracunskiRacun());
-					mt910.setID(mt102.getID());
+					mt910.setID(mt102.getUID());
 					mt910.setDatumValute(mt102.getDatumValute());
 					mt910.setIznos(suma);
 					mt910.setSifraValute(mt102.getSifraValute());
@@ -105,7 +105,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
     /* (non-Javadoc)
      * @see centralnabanka.CentralnaBankaPort#mt103(xml.mt103.TMT103  parameters )*
      */
-    public boolean mt103(xml.mt103.TMT103 parameters) { 
+    public boolean mt103(xml.mt103.MT103 parameters) { 
         LOG.info("Executing operation mt103");
         System.out.println(parameters);
 //        try {
@@ -139,7 +139,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 				mt900.setID("");/////
 				mt900.setSWIFTDuznika(bankaDuznika.getSwift());
 				mt900.setObrRacunBankeDuznika(bankaDuznika.getObracunskiRacun());
-				mt900.setIDNalogPoruka(parameters.getID());
+				mt900.setIDNalogPoruka(parameters.getUID());
 				mt900.setDatumValute(parameters.getDatumValute());
 				mt900.setIznos(parameters.getIznos());
 				mt900.setSifraValute(parameters.getSifraValute());
@@ -149,7 +149,7 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 				mt910.setID("");/////
 				mt910.setSWIFTPoverioca(bankaPoverioca.getSwift());
 				mt910.setObrRacunBankePoverioca(bankaPoverioca.getObracunskiRacun());
-				mt910.setID(parameters.getID());
+				mt910.setID(parameters.getUID());
 				mt910.setDatumValute(parameters.getDatumValute());
 				mt910.setIznos(parameters.getIznos());
 				mt910.setSifraValute(parameters.getSifraValute());
@@ -174,9 +174,9 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
     }
     
     /* (non-Javadoc)
-     * @see centralnabanka.CentralnaBankaPort#mt102(xml.mt102.TMT102  parameters )*
+     * @see centralnabanka.CentralnaBankaPort#mt102(xml.mt102.MT102  parameters )*
      */
-    public boolean mt102(xml.mt102.TMT102 parameters) { 
+    public boolean mt102(xml.mt102.MT102 parameters) { 
         LOG.info("Executing operation mt102");
         System.out.println(parameters);
 //        try {

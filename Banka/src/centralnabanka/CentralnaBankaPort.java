@@ -22,13 +22,13 @@ public interface CentralnaBankaPort {
     @WebMethod
     public boolean mt103(
         @WebParam(partName = "parameters", name = "mt103Request", targetNamespace = "http://centralnabanka")
-        xml.mt103.TMT103 parameters
+        xml.mt103.MT103 parameters
     );
 
     @WebResult(name = "boolean", targetNamespace = "http://centralnabanka", partName = "parameters")
     @WebMethod
     public boolean mt102(
         @WebParam(partName = "parameters", name = "mt102Request", targetNamespace = "http://centralnabanka")
-        xml.mt102.TMT102 parameters
+        xml.mt102.MT102 parameters
     );
 }

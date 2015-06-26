@@ -46,8 +46,6 @@
 				type="zahtevzaizvod:TZahtevZaIzvod" />
 			<xs:element name="zahtevZaIzvodResponse" 
 				type="izvod:TIzvod" />
-			<xs:element name="mt102Request" type="mt102:TMT102" />
-			<xs:element name="mt103Request" type="mt103:TMT103" />
 			<xs:element name="mt900Request" type="mt900:TMT900" />
 			<xs:element name="mt910Request" type="mt910:TMT910" />
 			<xs:element name="boolean" type="xs:boolean" />
@@ -71,7 +69,7 @@
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="mt102Request">
-		<wsdl:part name="parameters" element="tns:mt102Request">
+		<wsdl:part name="parameters" element="mt102:MT102">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="mt102Response">
@@ -79,7 +77,7 @@
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="mt103Request">
-		<wsdl:part name="parameters" element="tns:mt103Request">
+		<wsdl:part name="parameters" element="mt103:MT103">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="mt103Response">

@@ -26,9 +26,9 @@ import xml.globals.TFirma;
 import xml.izvod.StavkaPreseka;
 import xml.izvod.TIzvod;
 import xml.izvod.TIzvod.Zaglavlje;
+import xml.mt102.MT102;
 import xml.mt102.Placanje;
-import xml.mt102.TMT102;
-import xml.mt103.TMT103;
+import xml.mt103.MT103;
 import xml.racunfirme.RacunFirme;
 import centralnabanka.CentralnaBankaPort;
 
@@ -88,8 +88,8 @@ public class BankaPortImpl implements BankaPort {
 	}
 
 	private static void clearingAndSettlementConstruct(Banka b, XMLGregorianCalendar date) {
-		TMT102 mt102 = new TMT102();
-		mt102.setID("");/////
+		MT102 mt102 = new MT102();
+		mt102.setUID("");/////
 		mt102.setSWIFTDuznika(banka.getSwiftKod());
 		mt102.setObrRacunBankeDuznika(banka.getObracunskiRacun());
 		mt102.setSWIFTPoverioca(b.getSwiftKod());
@@ -198,7 +198,7 @@ public class BankaPortImpl implements BankaPort {
 	/* (non-Javadoc)
 	 * @see banka.BankaPort#mt103(xml.mt103.TMT103  parameters )*
 	 */
-	public boolean mt103(xml.mt103.TMT103 parameters) { 
+	public boolean mt103(xml.mt103.MT103 parameters) { 
 		LOG.info("Executing operation mt103");
 		System.out.println(parameters);
 		//		try {
@@ -286,8 +286,8 @@ public class BankaPortImpl implements BankaPort {
 		if (parameters.isHitno() || parameters.getIznos().compareTo(new BigDecimal("250000")) >= 0) {
 			//RTGS model
 			System.out.println("Globalni transfer; RTGS.");
-			TMT103 mt103 = new TMT103();
-			mt103.setID("");
+			MT103 mt103 = new MT103();
+			mt103.setUID("");
 			mt103.setSWIFTDuznika(banka.getSwiftKod());
 			mt103.setObrRacunBankeDuznika(banka.getObracunskiRacun());
 			Banka b = banke.get(parameters.getRacunPoverioca().subSequence(0, 3));
@@ -388,7 +388,7 @@ public class BankaPortImpl implements BankaPort {
 	/* (non-Javadoc)
 	 * @see banka.BankaPort#mt102(xml.mt102.TMT102  parameters )*
 	 */
-	public boolean mt102(xml.mt102.TMT102 parameters) { 
+	public boolean mt102(xml.mt102.MT102 parameters) { 
 		LOG.info("Executing operation mt102");
 		System.out.println(parameters);
 //		try {
