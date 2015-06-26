@@ -20,7 +20,7 @@ import xml.mt102.Placanje;
 import xml.mt102.TMT102;
 import xml.mt900.TMT900;
 import xml.mt910.TMT910;
-import xml.racunbanke.TRacunBanke;
+import xml.racunbanke.RacunBanke;
 import banka.BankaPort;
 
 /**
@@ -41,14 +41,14 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 
     private static final Logger LOG = Logger.getLogger(CentralnaBankaPortImpl.class.getName());
 
-    private static HashMap<String, TRacunBanke> racuniBanaka = new HashMap<String, TRacunBanke>();
+    private static HashMap<String, RacunBanke> racuniBanaka = new HashMap<String, RacunBanke>();
 	private static QName serviceName = new QName("http://banka", "bankaService");
 	private static QName portName = new QName("http://banka", "bankaPort");
 	private static ArrayList<TMT102> mt102s = new ArrayList<TMT102>();
     
 	private static void init() {
-		racuniBanaka.put("000000000000000000", new TRacunBanke("AAAAAAAA", "000000000000000000", new BigDecimal(10000000)));
-		racuniBanaka.put("000000000000000001", new TRacunBanke("BBBBBBBB", "000000000000000001", new BigDecimal(10000000)));
+		racuniBanaka.put("000000000000000000", new RacunBanke("AAAAAAAA", "000000000000000000", new BigDecimal(10000000)));
+		racuniBanaka.put("000000000000000001", new RacunBanke("BBBBBBBB", "000000000000000001", new BigDecimal(10000000)));
 	}
 	
 	public static void main(String[] args) {
@@ -60,8 +60,8 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 	        String racunBankeDuznika = mt102.getObrRacunBankeDuznika();
 	        String racunBankePoverioca = mt102.getObrRacunBankePoverioca();
 	        BigDecimal iznos = suma;
-	        TRacunBanke bankaDuznika = racuniBanaka.get(racunBankeDuznika);
-	        TRacunBanke bankaPoverioca = racuniBanaka.get(racunBankePoverioca);
+	        RacunBanke bankaDuznika = racuniBanaka.get(racunBankeDuznika);
+	        RacunBanke bankaPoverioca = racuniBanaka.get(racunBankePoverioca);
 	        if (bankaDuznika != null && bankaPoverioca != null &&
 	        		bankaDuznika.getStanje().compareTo(iznos) >= 0 ) {
 	        	System.out.println("Centralna banka: zahtev MT102 OK.");
@@ -121,8 +121,8 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
         String racunBankeDuznika = parameters.getObrRacunBankeDuznika();
         String racunBankePoverioca = parameters.getObrRacunBankePoverioca();
         BigDecimal iznos = parameters.getIznos();
-        TRacunBanke bankaDuznika = racuniBanaka.get(racunBankeDuznika);
-        TRacunBanke bankaPoverioca = racuniBanaka.get(racunBankePoverioca);
+        RacunBanke bankaDuznika = racuniBanaka.get(racunBankeDuznika);
+        RacunBanke bankaPoverioca = racuniBanaka.get(racunBankePoverioca);
         if (bankaDuznika != null && bankaPoverioca != null &&
         		bankaDuznika.getStanje().compareTo(iznos) >= 0 ) {
         	System.out.println("Centralna banka: zahtev MT103 OK.");

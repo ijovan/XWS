@@ -15,6 +15,7 @@
                 <xs:element name="placanja" type="mt:Placanje" maxOccurs="unbounded">
                 </xs:element>
             </xs:sequence>
+            <xs:attribute name="id" type="xs:long"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
