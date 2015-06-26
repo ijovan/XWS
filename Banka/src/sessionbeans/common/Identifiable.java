@@ -6,8 +6,8 @@ package sessionbeans.common;
  */
 public abstract class Identifiable {
 
-	public abstract String getId();
+	public abstract Long getId();
 	
-	public abstract void setId(String value);
+	public abstract void setId(Long value);
 	
 }

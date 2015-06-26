@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -65,6 +66,8 @@ public class RacunFirme extends Identifiable {
     protected BigDecimal stanje;
     @XmlElement(required = true)
     protected List<StavkaPreseka> stavke;
+    @XmlAttribute(name = "id")
+    protected Long id;
 
     public RacunFirme() {
 		super();
@@ -153,14 +156,24 @@ public class RacunFirme extends Identifiable {
         return this.stavke;
     }
 
-	@Override
-	public String getId() {
-		return broj;
+    @Override
+	public Long getId() {
+		return id;
 	}
 
-	@Override
-	public void setId(String value) {
-		broj = value;
+    @Override
+	public void setId(Long id) {
+		this.id = id;
 	}
+
+//	@Override
+//	public String getId() {
+//		return broj;
+//	}
+//
+//	@Override
+//	public void setId(String value) {
+//		broj = value;
+//	}
 
 }

@@ -6,13 +6,15 @@
 
     <xs:import namespace="http://xml/mt102" schemaLocation="MT102.xsd"/>
 
-    <xs:complexType name="TBanka">
-        <xs:sequence>
-            <xs:element name="oznakaBanke" type="xs:string"/>
-            <xs:element name="obracunskiRacun" type="xs:string"/>
-            <xs:element name="swiftKod" type="xs:string"/>
-            <xs:element name="placanja" type="mt:Placanje" maxOccurs="unbounded">
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="Banka">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="oznakaBanke" type="xs:string"/>
+                <xs:element name="obracunskiRacun" type="xs:string"/>
+                <xs:element name="swiftKod" type="xs:string"/>
+                <xs:element name="placanja" type="mt:Placanje" maxOccurs="unbounded">
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

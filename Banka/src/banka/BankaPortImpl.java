@@ -21,7 +21,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
-import xml.banka.TBanka;
+import xml.banka.Banka;
 import xml.globals.TFirma;
 import xml.izvod.StavkaPreseka;
 import xml.izvod.TIzvod;
@@ -48,10 +48,10 @@ import centralnabanka.CentralnaBankaPort;
 
 public class BankaPortImpl implements BankaPort {
 
-	private static final TBanka banka = new TBanka("012", "000000000000000000", "AAAAAAAA");
+	private static final Banka banka = new Banka("012", "000000000000000000", "AAAAAAAA");
 	private static CentralnaBankaPort centralnaBanka;
 	private static HashMap<String, RacunFirme> racuni = new HashMap<String, RacunFirme>();
-	private static HashMap<String, TBanka> banke = new HashMap<String, TBanka>();
+	private static HashMap<String, Banka> banke = new HashMap<String, Banka>();
 
 	public static void main(String[] args) {
 		init();
@@ -72,12 +72,12 @@ public class BankaPortImpl implements BankaPort {
 		}
 		racuni.put("012000000000000000", new RacunFirme("012000000000000000", new BigDecimal("300000")));
 		racuni.put("012000000000000001", new RacunFirme("012000000000000001", new BigDecimal("0")));
-		banke.put("345", new TBanka("345", "000000000000000001", "BBBBBBBB"));
-		banke.put("678", new TBanka("012", "000000000000000002", "CCCCCCCC"));
+		banke.put("345", new Banka("345", "000000000000000001", "BBBBBBBB"));
+		banke.put("678", new Banka("012", "000000000000000002", "CCCCCCCC"));
 		System.out.println("Bank init done.");
 	}
 
-	private static void clearingAndSettlement(TBanka b) {
+	private static void clearingAndSettlement(Banka b) {
 		try {
 			GregorianCalendar c = new GregorianCalendar();
 			XMLGregorianCalendar date = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
@@ -87,7 +87,7 @@ public class BankaPortImpl implements BankaPort {
 		}
 	}
 
-	private static void clearingAndSettlementConstruct(TBanka b, XMLGregorianCalendar date) {
+	private static void clearingAndSettlementConstruct(Banka b, XMLGregorianCalendar date) {
 		TMT102 mt102 = new TMT102();
 		mt102.setID("");/////
 		mt102.setSWIFTDuznika(banka.getSwiftKod());
@@ -290,7 +290,7 @@ public class BankaPortImpl implements BankaPort {
 			mt103.setID("");
 			mt103.setSWIFTDuznika(banka.getSwiftKod());
 			mt103.setObrRacunBankeDuznika(banka.getObracunskiRacun());
-			TBanka b = banke.get(parameters.getRacunPoverioca().subSequence(0, 3));
+			Banka b = banke.get(parameters.getRacunPoverioca().subSequence(0, 3));
 			if (b == null) {
 				return false;
 			}
@@ -355,7 +355,7 @@ public class BankaPortImpl implements BankaPort {
 			placanje.setIznos(parameters.getIznos());
 			placanje.setSifraValute(parameters.getOznakaValute());
 			String primalac = placanje.getPrimalacPoverilac().getRacun();
-			TBanka bPrimalac = banke.get(primalac.subSequence(0, 3));
+			Banka bPrimalac = banke.get(primalac.subSequence(0, 3));
 			if (bPrimalac == null) {
 				return false;
 			} else {

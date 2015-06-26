@@ -156,11 +156,12 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		return result;
 	}
 	
-	public void persist(T entity, String id) throws JAXBException, IOException {
+	public void persist(T entity, Long id) throws JAXBException, IOException {
 
-		String resourceId = id;
+		Long resourceId = id;
 		
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
+		System.out.println(url);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod(RequestMethod.PUT);
@@ -238,7 +239,6 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 			return Long.valueOf(line) + 1L;
 		return 1L;
 	}
-	
 	
 	public static int createSchema(String schemaName) throws Exception {
 		System.out.println("=== PUT: create a new database: " + schemaName + " ===");

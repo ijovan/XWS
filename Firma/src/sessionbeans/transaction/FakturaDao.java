@@ -171,14 +171,14 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 	
 	public static void init(){
 		XMLGregorianCalendar date1 = null;
-		XMLGregorianCalendar date2 = null;
-		XMLGregorianCalendar date3 = null;
+//		XMLGregorianCalendar date2 = null;
+//		XMLGregorianCalendar date3 = null;
 		XMLGregorianCalendar date4 = null;
 		XMLGregorianCalendar date5 = null;
 		try {
 			date1 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 06, 18, DatatypeConstants.FIELD_UNDEFINED);
-			date2 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 07, 11, DatatypeConstants.FIELD_UNDEFINED);
-			date3 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 8, 18, DatatypeConstants.FIELD_UNDEFINED);
+//			date2 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 07, 11, DatatypeConstants.FIELD_UNDEFINED);
+//			date3 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 8, 18, DatatypeConstants.FIELD_UNDEFINED);
 			date4 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 10, 11, DatatypeConstants.FIELD_UNDEFINED);
 			date5 = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2015, 11, 11, DatatypeConstants.FIELD_UNDEFINED);
 		} catch (DatatypeConfigurationException e) {
