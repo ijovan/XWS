@@ -140,14 +140,16 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		List<Faktura> sveFakture = findAll();
 		List<Faktura> povratna = new ArrayList<Faktura>();
 		System.out.println("Id trazenog partnera: "+partnerId.toString());
-		for (Faktura tf : sveFakture)
+		if (sveFakture != null)
 		{
-			System.out.println("Id trazenog dobavljaca: "+tf.getZaglavlje().getPIBDobavljaca());
-			if ( (tf.getZaglavlje().getPIBDobavljaca().equals(partnerId.toString()) )
-					|| (tf.getZaglavlje().getPIBKupca().equals(partnerId.toString())) ) 
-					{
-				 		povratna.add(tf);
-					}
+			for (Faktura tf : sveFakture)
+			{
+				if ( (tf.getZaglavlje().getPIBDobavljaca().equals(partnerId.toString()) )
+						|| (tf.getZaglavlje().getPIBKupca().equals(partnerId.toString())) ) 
+						{
+					 		povratna.add(tf);
+						}
+			}
 		}
 		return povratna;
 		
@@ -156,12 +158,15 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 	@Override
 	public List<StavkaFakture> getInvoiceItemsForInvoice(Long invoiceId, Long partnerId) throws IOException, JAXBException {
 		 List<Faktura> listaPartnerskih = getInvoicesForPartner(partnerId);
-		 for (Faktura tf : listaPartnerskih)
-		 {
-			 if ( tf.getId() == invoiceId)
-				 return tf.getStavkaFakture();
-		 }
-		return null;
+		 if (listaPartnerskih != null)
+			 {
+				 for (Faktura tf : listaPartnerskih)
+				 {
+					 if ( tf.getId() == invoiceId)
+						 return tf.getStavkaFakture();
+				 }
+			 }
+			return null;
 	}
 	
 	public static void init(){

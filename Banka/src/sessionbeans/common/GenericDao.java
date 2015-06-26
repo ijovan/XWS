@@ -12,7 +12,7 @@ import baza.EntityManagerBaseX;
 
 
 
-public abstract class GenericDao<T, ID extends Serializable> implements GenericDaoLocal<T, ID> {		// NE NASLEDJUJE IDENTIFIABLE
+public abstract class GenericDao<T extends Identifiable, ID extends Serializable> implements GenericDaoLocal<T, ID> {		// NE NASLEDJUJE IDENTIFIABLE
 	
 	protected String contextPath;
 	
@@ -32,9 +32,7 @@ public abstract class GenericDao<T, ID extends Serializable> implements GenericD
 	}
 
 	public T persist(T entity) throws JAXBException, IOException {
-		Long id = em.getIdentity();
-		//entity.setId(id);
-		em.persist(entity, id);
+		em.persist(entity, entity.getId());
 		return entity;
 	}
 	

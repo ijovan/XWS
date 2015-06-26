@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Logger;
+
 import sessionbeans.transaction.FakturaDaoLocal;
 import xml.faktura.Faktura;
 import xml.faktura.Faktura.StavkaFakture;
@@ -28,7 +30,7 @@ import xml.faktura.Faktura.StavkaFakture;
 @Path("/partneri")
 public class InvoiceService {
 
-	//private static Logger log = Logger.getLogger(Faktura.class);
+	private static Logger log = Logger.getLogger(Faktura.class);
 	private String[] p= {"12","13","14"};	
 
 	@EJB
@@ -78,7 +80,17 @@ public class InvoiceService {
 		System.out.println("USAO U 2");
 		ResponseBuilder rb;
 		if(isPartner(id)){
-			rb = Response.ok(fakturaDao.getInvoicesForPartner(Long.parseLong(id))); 
+			List<Faktura> povratna = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
+			
+			if (!povratna.isEmpty())
+			{
+				rb = Response.ok(povratna);
+			}
+			else
+			{
+				rb = Response.status(Status.NOT_FOUND);
+				log.info("Nema faktura za trazeni zahtev.");
+			}
 		}else{
 			rb = Response.status(Status.FORBIDDEN);
 		}

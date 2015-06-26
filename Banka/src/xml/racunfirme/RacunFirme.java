@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import sessionbeans.common.Identifiable;
 import xml.izvod.StavkaPreseka;
 
 
@@ -56,7 +57,7 @@ import xml.izvod.StavkaPreseka;
     "stavke"
 })
 @XmlRootElement(name = "RacunFirme")
-public class RacunFirme {
+public class RacunFirme extends Identifiable {
 
     @XmlElement(required = true)
     protected String broj;
@@ -151,5 +152,15 @@ public class RacunFirme {
         }
         return this.stavke;
     }
+
+	@Override
+	public String getId() {
+		return broj;
+	}
+
+	@Override
+	public void setId(String value) {
+		broj = value;
+	}
 
 }

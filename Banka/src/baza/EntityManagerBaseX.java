@@ -156,9 +156,9 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		return result;
 	}
 	
-	public void persist(T entity, Long id) throws JAXBException, IOException {
+	public void persist(T entity, String id) throws JAXBException, IOException {
 
-		String resourceId = String.valueOf(id);
+		String resourceId = id;
 		
 		url = new URL(REST_URL + schemaName + "/" + resourceId);
 		conn = (HttpURLConnection) url.openConnection();
@@ -237,6 +237,29 @@ public class EntityManagerBaseX<T, ID extends Serializable> {
 		if (line != null)
 			return Long.valueOf(line) + 1L;
 		return 1L;
+	}
+	
+	
+	public static int createSchema(String schemaName) throws Exception {
+		System.out.println("=== PUT: create a new database: " + schemaName + " ===");
+		URL url = new URL(REST_URL + schemaName);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod(RequestMethod.PUT);
+		String userpass = "admin:admin";
+		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+		conn.setRequestProperty ("Authorization", basicAuth);
+		conn.connect();
+		int responseCode = printResponse(conn);
+		conn.disconnect();
+		return responseCode;
+	}
+	
+	public static int printResponse(HttpURLConnection conn) throws Exception {
+		int responseCode = conn.getResponseCode();
+		String message = conn.getResponseMessage();
+		System.out.println("\n* HTTP response: " + responseCode + " (" + message + ')');
+		return responseCode;
 	}
 	
 	/*
