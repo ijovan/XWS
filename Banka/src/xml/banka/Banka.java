@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import sessionbeans.common.Identifiable;
 import xml.mt102.Placanje;
 
 
@@ -52,7 +53,7 @@ import xml.mt102.Placanje;
     "placanja"
 })
 @XmlRootElement(name = "Banka")
-public class Banka {
+public class Banka extends Identifiable {
 
     @XmlElement(required = true)
     protected String oznakaBanke;
