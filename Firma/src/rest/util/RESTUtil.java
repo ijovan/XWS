@@ -34,7 +34,7 @@ import xml.faktura.Faktura;
  */
 public class RESTUtil<T> {
 
-	public static final String REST_URL = "http://localhost:8984/rest/";
+	public static final String REST_URL = "http://localhost:8080/BaseX75/rest/";
 	
 	public static void main(String[] args) throws Exception {
 		FakturaDao f = new FakturaDao();

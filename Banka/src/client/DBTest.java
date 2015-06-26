@@ -3,12 +3,35 @@ package client;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+
 import sessionbeans.specific.RacunDao;
 import xml.racunfirme.RacunFirme;
 import baza.EntityManagerBaseX;
 
+@Startup
+@Singleton
 public class DBTest {
 
+	@EJB
+	private static RacunDao racun;
+	
+//	@PostConstruct
+//	public void run() throws Exception {
+//		foo3();
+//	}
+	
+	@PostConstruct
+	public void test() throws Exception {
+		for (int i = 0; i < 20; i++) {
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAA");
+		}
+		System.out.println(racun);
+	}
+	
 	public static void main(String[] args) throws Exception {
 		foo2();
 	}
@@ -19,7 +42,6 @@ public class DBTest {
 
 	public static void foo1() throws Exception {
 		{
-			RacunDao racun = new RacunDao();
 			RacunFirme entity = new RacunFirme();
 			entity.setBroj("123");
 			entity.setStanje(new BigDecimal("1"));
@@ -37,7 +59,6 @@ public class DBTest {
 	}
 
 	public static void foo2() throws Exception {
-		RacunDao racun = new RacunDao();
 		List<RacunFirme> rf = racun.findAll();
 		for (RacunFirme r : rf) {
 			System.out.println(r.getId());
@@ -45,7 +66,6 @@ public class DBTest {
 	}
 
 	public static void foo3() throws Exception {
-		RacunDao racun = new RacunDao();
 		racun.remove(33L);
 	}
 

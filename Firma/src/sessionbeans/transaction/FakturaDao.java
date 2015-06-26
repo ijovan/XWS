@@ -308,8 +308,10 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 		try {
 			EntityManagerBaseX.createSchema("fakture");
 			EntityManagerBaseX<Faktura, Long> emf =new EntityManagerBaseX<Faktura, Long>("fakture", "xml.faktura");
+			faktura1.setId(1L);
 			System.out.println("fac1");
 			emf.persist(faktura1, faktura1.getId());
+			faktura2.setId(2L);
 			System.out.println("fac2");
 			emf.persist(faktura2, faktura2.getId());
 

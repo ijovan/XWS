@@ -82,6 +82,10 @@ public class InvoiceService {
 		if(isPartner(id)){
 			List<Faktura> povratna = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
 			
+			for (Faktura faktura : povratna) {
+				System.out.println(faktura.getZaglavlje().getNazivDobavljaca());
+			}
+			
 			if (!povratna.isEmpty())
 			{
 				rb = Response.ok(povratna);
