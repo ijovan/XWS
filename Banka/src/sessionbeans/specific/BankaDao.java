@@ -15,7 +15,7 @@ import xml.mt102.Placanje;
 @Stateless
 @LocalBean
 @Local(BankaDaoLocal.class)
-public class BankaDao extends GenericDao<Banka, Long> implements BankaDaoLocal{
+public class BankaDao extends GenericDao<Banka, Long> implements BankaDaoLocal {
 
 	public BankaDao(String contextPath, String schemaName) {
 		super(contextPath, schemaName);

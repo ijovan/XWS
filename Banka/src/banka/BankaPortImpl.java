@@ -57,17 +57,19 @@ public class BankaPortImpl implements BankaPort {
 		init();
 		clearingAndSettlement(banka);
 	}
-
+	
 	private static void init() {
 		try {
-			URL wsdlLocation = new URL("http://localhost:8080/centralna_banka/services/CentralnaBanka?wsdl");
+			URL wsdlLocation = new URL("http://localhost:8080/centralnabanka/services/CentralnaBanka?wsdl");
 			QName serviceName = new QName("http://centralnabanka", "centralnaBankaService");
 			QName portName = new QName("http://centralnabanka", "centralnaBankaPort");
+			
 
 			Service service = Service.create(wsdlLocation, serviceName);
 
 			centralnaBanka = service.getPort(portName, CentralnaBankaPort.class); 
 		} catch (MalformedURLException e) {
+			System.out.println("Failed to connect to Central Bank.");
 			e.printStackTrace();
 		}
 		racuni.put("012000000000000000", new RacunFirme("012000000000000000", new BigDecimal("300000")));

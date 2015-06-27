@@ -5,7 +5,8 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
-import xml.mt103.MT103;
+import xml.mt102.MT102;
+import xml.mt900.TMT900;
 import banka.BankaPort;
 
 public class CentralnaBankaClient {
@@ -20,8 +21,11 @@ public class CentralnaBankaClient {
 			
 			BankaPort banka = service.getPort(portName, BankaPort.class); 
 			
-			MT103 mt103 = new MT103();
-			banka.mt103(mt103);
+			TMT900 mt900 = new TMT900();
+			banka.mt900(mt900);
+			
+			MT102 mt102 = new MT102();
+			banka.mt102(mt102);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

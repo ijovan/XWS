@@ -15,7 +15,7 @@ import javax.xml.ws.Service;
  * 
  */
 @WebServiceClient(name = "centralnaBankaService", 
-                  wsdlLocation = "file:/C:/Users/Korisnik/Desktop/Vezbe/XWS15-Vebe_5_6_7_JAX-WS_files/5. VezebeWSDLWS/WEB-INF/wsdl/centralna_banka.wsdl",
+                  wsdlLocation = "file:/C:/Users/Korisnik/Desktop/XWS/XWS/CentralnaBanka/WEB-INF/wsdl/centralna_banka.wsdl",
                   targetNamespace = "http://centralnabanka") 
 public class CentralnaBankaService extends Service {
 
@@ -26,11 +26,11 @@ public class CentralnaBankaService extends Service {
     static {
         URL url = null;
         try {
-            url = new URL("file:/C:/Users/Korisnik/Desktop/Vezbe/XWS15-Vebe_5_6_7_JAX-WS_files/5. VezebeWSDLWS/WEB-INF/wsdl/centralna_banka.wsdl");
+            url = new URL("file:/C:/Users/Korisnik/Desktop/XWS/XWS/CentralnaBanka/WEB-INF/wsdl/centralna_banka.wsdl");
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(CentralnaBankaService.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "file:/C:/Users/Korisnik/Desktop/Vezbe/XWS15-Vebe_5_6_7_JAX-WS_files/5. VezebeWSDLWS/WEB-INF/wsdl/centralna_banka.wsdl");
+                     "Can not initialize the default wsdl from {0}", "file:/C:/Users/Korisnik/Desktop/XWS/XWS/CentralnaBanka/WEB-INF/wsdl/centralna_banka.wsdl");
         }
         WSDL_LOCATION = url;
     }

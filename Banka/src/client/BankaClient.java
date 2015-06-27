@@ -12,7 +12,7 @@ public class BankaClient {
 
     public void testIt() {
 		try {
-			URL wsdlLocation = new URL("http://localhost:8080/centralna_banka/services/CentralnaBanka?wsdl");
+			URL wsdlLocation = new URL("http://localhost:8080/centralnabanka/services/CentralnaBanka?wsdl");
 			QName serviceName = new QName("http://centralnabanka", "centralnaBankaService");
 			QName portName = new QName("http://centralnabanka", "centralnaBankaPort");
 
