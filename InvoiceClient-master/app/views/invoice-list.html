@@ -1,0 +1,231 @@
+<div class="row">
+	<div class="col-md-2">
+		<label>Filtriranje:</label>
+	</div>
+</div>
+<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-3">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Naziv dobavljača:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.suplierName"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Adresa dobavljača:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.suplierAddress"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								PIB dobavljača:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.supplierPib"></input>
+							</div>
+						</div><div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Naziv kupca:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.buyerName"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Adresa kupca:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.buyerAddress"></input>
+							</div>
+						</div>
+					</form>	
+				</div>
+				<div class="col-md-3">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								PIB kupca:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.buyerPib"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Broj računa:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.acountNumber"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Datum računa:
+							</label>
+							<div class="input-group col-sm-7">
+								<select ng-model="comparatorDateSelect"  ng-options="value as value.label for value in datecomparators">		 
+								</select>
+								<input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="invoiceFilterdate" is-open="dateOpened" close-text="Close" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="openDatepicker($event, 'dateOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Vrednost robe:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.totalGoodsValue"></input>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-3">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Vrednost usluga:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.totalServiceValue"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Ukupno robe i usluga:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.totalValue"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Ukupan rabat:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.totalRabate"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Ukupan porez:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.totalTax"></input>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-3">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Oznaka valute:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.currency"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Iznos za uplatu:
+							</label>
+							<div class="col-sm-7">
+								<select ng-model="comparatorAmountSelect"  ng-options="value as value.label for value in comparators">		 
+								</select>
+								<input class="form-control" ng-model="invoiceFilterAmount"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Uplata na račun:
+							</label>
+							<div class="col-sm-7">
+								<input class="form-control" ng-model="invoiceFilter.paymentAccount"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-5 control-label">
+								Datum valute:
+							</label>
+							<div class="input-group col-sm-7">
+								<select ng-model="comparatorCurrencyDateSelect"  ng-options="value as value.label for value in datecomparators">		 
+								</select>
+								<input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="invoiceFiltercurrencydate" is-open="dateOpened" close-text="Close" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="openDatepicker($event, 'dateOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<div>
+	<table class="table table-striped table-bordered table-condensed table-hover">
+		<tr>
+			<th>Naziv dobavljača<i class="fa fa-fw fa-sort"></i></th>
+			<th>Adresa dobavljača<i class="fa fa-fw fa-sort"></i></th>
+			<th>PIB dobavljača<i class="fa fa-fw fa-sort"></i></th>
+			<th>Naziv kupca<i class="fa fa-fw fa-sort"></i></th>
+			<th>Adresa kupca<i class="fa fa-fw fa-sort"></i></th>
+			<th>PIB kupca<i class="fa fa-fw fa-sort"></i></th>
+			<th>Broj računa<i class="fa fa-fw fa-sort"></i></th>
+			<th>Datum računa<i class="fa fa-fw fa-sort"></i></th>
+			<th>Vrednost robe<i class="fa fa-fw fa-sort"></i></th>
+			<th>Vrednost usluga<i class="fa fa-fw fa-sort"></i></th>
+			<th>Ukupno<i class="fa fa-fw fa-sort"></i></th>
+			<th>Ukupan rabat<i class="fa fa-fw fa-sort"></i></th>
+			<th>Ukupan porez<i class="fa fa-fw fa-sort"></i></th>
+			<th>Oznaka valute<i class="fa fa-fw fa-sort"></i></th>
+			<th>Iznos za uplatu<i class="fa fa-fw fa-sort"></i></th>
+			<th>Uplata na račun<i class="fa fa-fw fa-sort"></i></th>
+			<th>Datum valute<i class="fa fa-fw fa-sort"></i></th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="invoice in invoices | filter: invoiceFilter" ng-if="compare(invoice, 'totalAmount', invoiceFilterAmount, comparatorAmountSelect.label) == true
+			&& datecompare(invoice, 'date', invoiceFilterdate, comparatorDateSelect.id) == true &&
+			datecompare(invoice, 'currencyDate', invoiceFiltercurrencydate, comparatorCurrencyDateSelect.id) == true" ng-click="showInvoice(invoice)">
+			<td>{{invoice.suplierName}}</td>
+			<td>{{invoice.suplierAddress}}</td>
+			<td>{{invoice.supplierPib}}</td>
+			<td>{{invoice.buyerName}}</td>
+			<td>{{invoice.buyerAddress}}</td>
+			<td>{{invoice.buyerPib}}</td>
+			<td>{{invoice.acountNumber}}</td>
+			<td>{{invoice.date}}</td>
+			<td>{{invoice.totalGoodsValue}}</td>
+			<td>{{invoice.totalServiceValue}}</td>
+			<td>{{invoice.totalValue}}</td>
+			<td>{{invoice.totalRabate}}</td>
+			<td>{{invoice.totalTax}}</td>
+			<td>{{invoice.currency}}</td>
+			<td>{{invoice.totalAmount}}</td>
+			<td>{{invoice.paymentAccount}}</td>
+			<td>{{invoice.currencyDate}}</td>
+			<td><button class="btn" ng-click="showItems(invoice)">Stavke</button></td>
+			<td><button class="btn" ng-click="insertOrEditInvoice()">Izmeniti</button></td>
+			<td><button class="btn" ng-click="delete()">Obrisati</button></td>
+			<td><button class="btn" ng-click="showInvoice(invoice)">Detalji</button></td>
+		</tr>
+	</table>
+	<div>
+		<button class="btn" ng-click="insertOrEditInvoice()">Nova faktura</button>
+	</div>
+</div>

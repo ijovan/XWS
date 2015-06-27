@@ -1,0 +1,132 @@
+<div class="container-fluid">
+	<div class="row">
+	
+	
+		<button class="btn" ng-click="showInvoice(invoice)">Prikaz detalja fakture</button>
+	
+		<div class="row">
+			<div class="col-md-8">
+			
+			<div class="form-group">
+				<label>Stavke:</label>
+				<table class="table table-striped table-bordered table-condensed table-hover">
+					<tr>
+						<th>Redni broj</th>
+						<th>Naziv robe ili usluge</th>
+						<th>Količina</th>
+						<th>Jedinična cena</th>
+						<th>Vrednost</th>
+						<th>Procenat rabata</th>
+						<th>Iznos rabata</th>
+						<th>Umanjeno za rabat</th>
+						<th>Ukupan porez</th>
+					</tr>
+					<tr ng-repeat="item in invoice.invoiceItems | filter:invoiceItemFilter" ng-if="compare(item, 'quantity', invoiceItemFilterquantity, comparatorQuantitySelect.label) == true && 
+						compare(item, 'minusRabat', invoiceItemFilterminusRabat, comparatorMinusRabatSelect.label) == true" ng-click="openModal(item)">
+						<td>1</td>
+						<td>{{item.goodsName}}</td>
+						<td>{{item.quantity}} {{item.measureUnit}}</td>
+						<td>{{item.pricePerUnit}}</td>
+						<td>{{item.amount}}</td>
+						<td>{{item.rabatePercentage}}</td>
+						<td>{{item.rabateAmount}}</td>
+						<td>{{item.minusRabat}}</td>
+						<td>{{item.totalTax}}</td>
+					</tr>
+				</table>
+			</div>
+			
+			
+			<div class="form-group">
+				<button class="btn btn-default" ng-click="openModal()">Nova stavka</button>
+			</div>
+		</form>
+			</div>
+			<div class="col-md-4">
+			<label>Filtriranje stavki:</label>
+			
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Naziv:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.goodsName"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Količina:
+						</label>
+						<div class="col-sm-7">
+							<select ng-model="comparatorQuantitySelect"  ng-options="value as value.label for value in comparators">		 
+							</select>
+							<input class="form-control" ng-model="invoiceItemFilterquantity" value=""></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Jedinica mere:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.measureUnit"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Jedinična cena:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.pricePerUnit"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Vrednost:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.amount"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Procenat rabata:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.rabatePercentage"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Iznos rabata:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.rabateAmount"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Umanjeno za rabat:
+						</label>
+						<div class="col-sm-7">
+							<select ng-model="comparatorMinusRabatSelect"  ng-options="value as value.label for value in comparators">		 
+							</select>
+							<input class="form-control" ng-model="invoiceItemFilterminusRabat"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-sm-5 control-label">
+							Ukupan porez:
+						</label>
+						<div class="col-sm-7">
+							<input class="form-control" ng-model="invoiceItemFilter.totalTax"></input>
+						</div>
+					</div>
+				</form>
+			</div>
+	</div>
+</div>
+<div>
+    <button class="btn" ng-click="save()">save</button>
+    <button class="btn" ng-click="delete()">delete</button>
+</div>

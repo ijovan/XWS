@@ -1,0 +1,84 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-8">
+			<form>
+				<div class="form-group">
+					<label >Naziv dobavljača:</label>
+					{{invoice.suplierName}}
+				</div>
+				<div class="form-group">
+					<label>Adresa dobavljača:</label>
+					{{invoice.suplierAddress}}
+				</div>
+				<div class="form-group">
+					<label>PIB dobavljača:</label>
+					{{invoice.supplierPib}}
+				</div>
+				<div class="form-group">
+					<label>Naziv kupca:</label>
+					{{invoice.buyerName}}
+				</div>
+				<div class="form-group">
+					<label>Adresa kupca:</label>
+					{{invoice.buyerAddress}}
+				</div>
+				<div class="form-group">
+					<label>PIB kupca:</label>
+					{{invoice.buyerPib}}
+				</div>
+				<div class="form-group">
+					<label>Broj računa:</label>
+					{{invoice.acountNumber}}
+				</div>
+				<div class="form-group">
+					<label>Datum računa:</label>
+					{{invoice.date}}
+				</div>
+				<div class="form-group">
+					<label >Vrednost robe:</label>
+					{{invoice.totalGoodsValue}}
+				</div>
+				<div class="form-group">
+					<label>Vrednost usluga:</label>
+					{{invoice.totalServiceValue}}
+				</div>
+				<div class="form-group">
+					<label>Ukupno roba i usluge:</label>
+					{{invoice.totalValue}}
+				</div>
+				<div class="form-group">
+					<label>Ukupan rabat:</label>
+					{{invoice.totalRabate}}
+				</div>
+				<div class="form-group">
+					<label>Ukupan porez:</label>
+					{{invoice.totalTax}}
+				</div>
+				<div class="form-group">
+					<label>Oznaka valute:</label>
+					{{invoice.currency}}
+				</div>
+				<div class="form-group">
+					<label>Iznos za uplatu:</label>
+					{{invoice.totalAmount}}
+				</div>
+				<div class="form-group">
+					<label>Uplata na račun:</label>
+					{{invoice.paymentAccount}}
+				</div>
+				<div class="form-group">
+					<label>Datum valute:</label>
+					<div class="input-group">
+					{{invoice.currencyDate}}
+				</div>
+			</div>
+			<div class="col-md-4">
+			</div>
+		</div>
+		
+		
+		<button class="btn" ng-click="showItems(invoice)">Prikaz stavki fakture</button>
+		
+			</div>
+	</div>
+</div>
