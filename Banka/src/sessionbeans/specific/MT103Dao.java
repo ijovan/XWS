@@ -1,14 +1,15 @@
 package sessionbeans.specific;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.xml.bind.JAXBException;
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 import sessionbeans.common.GenericDao;
-import xml.mt102.Placanje;
 import xml.mt103.MT103;
 
+@Stateless
+@LocalBean
+@Local(MT103DaoLocal.class)
 public class MT103Dao extends GenericDao<MT103, Long> implements MT103DaoLocal{
 	
 	

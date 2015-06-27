@@ -1,8 +1,15 @@
 package sessionbeans.specific;
 
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+
 import sessionbeans.common.GenericDao;
 import xml.racunbanke.RacunBanke;
 
+@Stateless
+@LocalBean
+@Local(RacunBankaDaoLocal.class)
 public class RacunBankeDao extends GenericDao<RacunBanke, Long> implements RacunBankaDaoLocal {
 
 	public static final String contextPath = "xml.banka";

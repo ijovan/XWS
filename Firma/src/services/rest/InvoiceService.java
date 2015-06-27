@@ -26,6 +26,8 @@ import sessionbeans.transaction.FakturaDaoLocal;
 import xml.faktura.Faktura;
 import xml.faktura.Faktura.StavkaFakture;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Path("/partneri")
 public class InvoiceService {
@@ -50,7 +52,6 @@ public class InvoiceService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendInvoice(@PathParam("id") String id, Faktura tf) throws JAXBException, IOException{
-		System.out.println("USAO U 1");
 		ResponseBuilder rb;
 		//provera da li je poslovni parner kompanije
 		if(isPartner(id)){
@@ -77,18 +78,15 @@ public class InvoiceService {
 	@Path("/{id}/fakture")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllInvoice(@PathParam("id") String id) throws IOException, JAXBException{
-		System.out.println("USAO U 2");
 		ResponseBuilder rb;
 		if(isPartner(id)){
 			List<Faktura> povratna = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
-			
-			for (Faktura faktura : povratna) {
-				System.out.println(faktura.getZaglavlje().getNazivDobavljaca());
-			}
-			
+			String pov="";
+			ObjectMapper mp = new ObjectMapper();
+			pov = mp.writeValueAsString(povratna);
 			if (!povratna.isEmpty())
 			{
-				rb = Response.ok(povratna);
+					rb= Response.ok(pov);
 			}
 			else
 			{
@@ -111,7 +109,6 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findInvoiceById(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
-		System.out.println("USAO U 3");
 		ResponseBuilder rb = null;
 		if(isPartner(id)){
 			List<Faktura> supplierInvoices = fakturaDao.getInvoicesForPartner(Long.parseLong(id));
@@ -138,7 +135,6 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getInvoiceItems(@PathParam("id") String id, @PathParam("id_i") long idi) throws JAXBException, IOException{
-		System.out.println("USAO U 4");
 		ResponseBuilder rb;
 		if(isPartner(id)){
 			List<Faktura.StavkaFakture> povratna = fakturaDao.getInvoiceItemsForInvoice(idi, Long.parseLong(id));
@@ -166,7 +162,6 @@ public class InvoiceService {
 	@Path("/{id}/fakture/{id_i}/stavke")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response createInvoiceItem(@PathParam("id") String id, @PathParam("id_i") long idi, StavkaFakture sf) throws URISyntaxException{
-		System.out.println("USAO U 5");
 		ResponseBuilder rb=null;
 		Faktura result = null;		
 		if(isPartner(id)){
@@ -336,5 +331,5 @@ public class InvoiceService {
 
 		return false;
 	}
-
+	
 }

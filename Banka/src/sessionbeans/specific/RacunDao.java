@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
 
@@ -12,6 +13,7 @@ import xml.izvod.StavkaPreseka;
 import xml.racunfirme.RacunFirme;
 
 @Stateless
+@LocalBean
 @Local(RacunDaoLocal.class)
 public class RacunDao extends GenericDao<RacunFirme, Long> implements RacunDaoLocal{
 

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -31,6 +32,7 @@ import xml.globals.TFirma;
 import baza.EntityManagerBaseX;
 
 @Stateless
+@LocalBean
 @Local(FakturaDaoLocal.class)
 public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoLocal{
 
@@ -136,10 +138,8 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 
 	@Override
 	public List<Faktura> getInvoicesForPartner(Long partnerId) throws IOException, JAXBException {
-		System.out.println("TUUUu");
 		List<Faktura> sveFakture = findAll();
 		List<Faktura> povratna = new ArrayList<Faktura>();
-		System.out.println("Id trazenog partnera: "+partnerId.toString());
 		if (sveFakture != null)
 		{
 			for (Faktura tf : sveFakture)
