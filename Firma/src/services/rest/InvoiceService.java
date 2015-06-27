@@ -115,7 +115,10 @@ public class InvoiceService {
 			rb = Response.status(Status.NOT_FOUND);//stavim da nije pronadjen u slucaju prazne liste
 			for (Faktura tf : supplierInvoices){
 				if(tf.getId() == idi) {
-					rb = Response.ok(tf);
+					String pov="";
+					ObjectMapper mp = new ObjectMapper();
+					pov = mp.writeValueAsString(tf);
+					rb = Response.ok(pov);
 					break; //kad nadje kraj da ga ne pregazi
 				}
 			}
