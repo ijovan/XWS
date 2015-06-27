@@ -8,7 +8,9 @@ import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
+import sessionbeans.specific.BankaDao;
 import sessionbeans.specific.RacunDao;
+import xml.banka.Banka;
 import xml.racunfirme.RacunFirme;
 import baza.EntityManagerBaseX;
 
@@ -33,7 +35,8 @@ public class DBTest {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		foo2();
+		foo4();
+		foo5();
 	}
 
 	public static void foo0() throws Exception {
@@ -67,6 +70,23 @@ public class DBTest {
 
 	public static void foo3() throws Exception {
 		racun.remove(33L);
+	}
+	
+	private static void foo4() throws Exception {
+		EntityManagerBaseX.createSchema("banks");
+	
+	}
+	
+	private static void foo5() throws Exception {
+		BankaDao banka = new BankaDao();
+		Banka ban = new Banka();
+		ban.setId(1L);
+		ban.setOznakaBanke("Najbolja banka ikad");
+		banka.persist(ban);
+		
+		ban = banka.findById(1l);
+		System.out.println(ban.getOznakaBanke());
+		
 	}
 
 }

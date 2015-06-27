@@ -17,6 +17,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import sessionbeans.common.Identifiable;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -54,7 +56,7 @@ import javax.xml.bind.annotation.XmlType;
     "stanje"
 })
 @XmlRootElement(name = "RacunBanke")
-public class RacunBanke {
+public class RacunBanke extends Identifiable{
 
     @XmlElement(required = true)
     protected String swift;
