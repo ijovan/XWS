@@ -14,7 +14,27 @@ angular.module('invoice', [
 		
 		//preuzimanje fakure sa servera. Posto smo u Invoice factory rutu definisali kao '...invoice/:invoiceId' invoiceId ce se proslediti kao parametar rute na server 
 		Invoice.get({'invoiceId':invoiceId}).$promise.then(function (data) {
-			$scope.invoice = data;
+			console.log(data);
+			console.log(data["ns2.Faktura"]["ns2.Zaglavlje"]);
+			var zaglavlje = data["ns2.Faktura"]["ns2.Zaglavlje"];
+			$scope.invoice={};
+			$scope.invoice.suplierName = zaglavlje["ns2.Naziv_dobavljaca"];
+			$scope.invoice.suplierAddress = zaglavlje["ns2.Adresa_dobavljaca"];
+			$scope.invoice.supplierPib = zaglavlje["ns2.PIB_dobavljaca"];
+			$scope.invoice.buyerName = zaglavlje["ns2.Naziv_kupca"];
+			$scope.invoice.buyerAddress = zaglavlje["ns2.Adresa_kupca"];
+			$scope.invoice.buyerPib = zaglavlje["ns2.PIB_kupca"];
+			$scope.invoice.acountNumber= zaglavlje["ns2.Broj_racuna"];
+			$scope.invoice.date= zaglavlje["ns2.Datum_racuna"];
+			$scope.invoice.totalGoodsValue= zaglavlje["ns2.Vrednost_robe"];
+			$scope.invoice.totalServiceValue= zaglavlje["ns2.Vrednost_usluga"];
+			$scope.invoice.totalValue= zaglavlje["ns2.Ukupno_roba_i_usluga"];
+			$scope.invoice.totalRabate= zaglavlje["ns2.Ukupan_rabat"];
+			$scope.invoice.totalTax= zaglavlje["ns2.Ukupan_porez"];
+			$scope.invoice.currency= zaglavlje["ns2.Oznaka_valute"];
+			$scope.invoice.totalAmount= zaglavlje["ns2.Iznos_za_uplatu"];
+			$scope.invoice.paymentAccount = zaglavlje["ns2.Uplata_na_racun"];
+			$scope.invoice.currencyDate = zaglavlje["ns2.Datum_valute"];
 		});
 	}
 	//ako kreiramo novu fakutru
@@ -83,7 +103,6 @@ angular.module('invoice', [
 		if(val==null || val.trim()=='')
 			return true;
 		//Unary plus za konverziju u broj
-		console.log(comparator+" "+val);
 			if (comparator=='=')
 				return +item[prop] == +val;
 			if (comparator=="<")

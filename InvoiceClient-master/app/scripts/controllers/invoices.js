@@ -109,13 +109,14 @@
 	
  	];
  	//preuzimanje niza faktura sa servera
-	/*
+	
  	Invoice.query().$promise.then(function (data) {
  		$scope.invoices = data;
+		console.log($scope.invoices);
  	}, function (error) {
  		console.log(error);
  	});
-	*/
+	
 
 	///$scope.invoices = Invoice.query();
 	$log.info($scope.invoices.length);//0
@@ -158,11 +159,9 @@
 	$scope.comparatorAmountSelect = $scope.comparators[0];
 	
 	$scope.compare = function(item, prop, val, comparator){
-		console.log("u compare");
 		if(val==null || val.trim()=='')
 			return true;
 		//Unary plus za konverziju u broj
-		console.log(comparator+" "+val);
 			if (comparator=='=')
 				return +item[prop] == +val;
 			if (comparator=="<")
@@ -173,7 +172,6 @@
 	
 	$scope.datecompare = function(item, prop, val, comparator){
 		//var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/;
-		console.log("u datecompare " +val);
 		if(val==null)
 			return true;
 		//if ((String(val)).match(dateReg))
@@ -183,7 +181,6 @@
 			itemdate.setHours(0,0,0,0);
 			val.setHours(0,0,0,0);
 		//Unary plus za konverziju u milisekunde
-		console.log(comparator+" "+itemdate);
 			if (comparator=='=')
 				return +itemdate == +val;
 			if (comparator=="<")
