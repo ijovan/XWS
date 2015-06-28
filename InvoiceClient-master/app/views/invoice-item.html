@@ -4,40 +4,40 @@
 <div class="modal-body">
     <form>
         <div class="form-group">
-            <label>Naziv robe ili usluge:</label>
-            <input class="form-control" ng-model="invoiceItem.goodsName"></input>
+            <label>Naziv robe ili usluge:</label><i id="selt1" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.goodsName" id="selti1" onblur="proveriParSU('selt',1, 120)"></input>
         </div>
         <div class="form-group">
-            <label>Količina:</label>
-            <input class="form-control" ng-model="invoiceItem.quantity"></input>
+            <label>Količina:</label><i id="selt2" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.quantity" id="selti2" onblur="proveriParSUDouble('selt',2, 10)"></input>
         </div>
         <div class="form-group">
-            <label>Jedinica mere:</label>
-            <input class="form-control" ng-model="invoiceItem.measureUnit"></input>
+            <label>Jedinica mere:</label><i id="selt3" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.measureUnit" id="selti3" onblur="proveriParSU('selt',3, 6)"></input>
         </div>
         <div class="form-group">
-            <label>Jedinična cena:</label>
-            <input class="form-control" ng-model="invoiceItem.pricePerUnit"></input>
+            <label>Jedinična cena:</label><i id="selt4" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.pricePerUnit" id="selti4" onblur="proveriParSUDouble('selt',4, 10)"></input>
         </div>
         <div class="form-group">
-            <label>Vrednost:</label>
-            <input class="form-control" ng-model="invoiceItem.amount"></input>
+            <label>Vrednost:</label><i id="selt5" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.amount" id="selti5" onblur="proveriParSUDouble('selt',5, 12)"></input>
         </div>
         <div class="form-group">
-            <label>Procenat rabata:</label>
-            <input class="form-control" ng-model="invoiceItem.rabatePercentage"></input>
+            <label>Procenat rabata:</label><i id="selt6" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.rabatePercentage" id="selti6" onblur="proveriParSUDouble('selt',6, 5)"></input>
         </div>
         <div class="form-group">
-            <label>Iznos rabata:</label>
-            <input class="form-control" ng-model="invoiceItem.rabateAmount"></input>
+            <label>Iznos rabata:</label><i id="selt7" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.rabateAmount" id="selti7" onblur="proveriParSUDouble('selt',7, 12)"></input>
         </div>
         <div class="form-group">
-            <label>Umanjeno za rabat:</label>
-            <input class="form-control" ng-model="invoiceItem.minusRabat"></input>
+            <label>Umanjeno za rabat:</label><i id="selt8" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.minusRabat" id="selti8" onblur="proveriParSUDouble('selt',8, 12)"></input>
         </div>
         <div class="form-group">
-            <label>Ukupan porez:</label>
-            <input class="form-control" ng-model="invoiceItem.totalTax"></input>
+            <label>Ukupan porez:</label><i id="selt9" style="visibility:hidden;color:red;">Obavezno polje</i>
+            <input class="form-control" ng-model="invoiceItem.totalTax" id="selti9" onblur="proveriParSUDouble('selt',9, 12)"></input>
         </div>
     </form>
 </div>

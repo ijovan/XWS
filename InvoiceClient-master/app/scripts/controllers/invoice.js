@@ -157,8 +157,31 @@ angular.module('invoice', [
 	//cuvanje izmena
 	$scope.save = function () {
 		
+		var data = {};
+		data.zaglavlje={};
+		data.zaglavlje.id = $scope.invoice.id;
 		
-		console.log($scope.invoice.date);
+			data.zaglavlje.nazivDobavljaca = $scope.invoice.suplierName;
+			data.zaglavlje.adresaDobavljaca = $scope.invoice.suplierAddress;
+			data.zaglavlje.pibdobavljaca = $scope.invoice.supplierPib;
+			data.zaglavlje.nazivKupca = $scope.invoice.buyerName;
+			data.zaglavlje.adresaKupca = $scope.invoice.buyerAddress;
+			data.zaglavlje.pibkupca = $scope.invoice.buyerPib;
+			data.zaglavlje.BrojRacuna = $scope.invoice.acountNumber;
+			data.zaglavlje.datumRacuna = $scope.invoice.date;
+			data.zaglavlje.vrednostRobe = $scope.invoice.totalGoodsValue;
+			data.zaglavlje.vrednostUsluga = $scope.invoice.totalServiceValue;
+			data.zaglavlje.ukupnoRobaIUsluga = $scope.invoice.totalValue;
+			data.zaglavlje.ukupanRabat = $scope.invoice.totalRabate;
+			data.zaglavlje.ukupanPorez = $scope.invoice.totalTax;
+			data.zaglavlje.oznakaValute = $scope.invoice.currency;
+			data.zaglavlje.iznosZaUplatu = $scope.invoice.totalAmount;
+			data.zaglavlje.uplataNaRacun = $scope.invoice.paymentAccount;
+			data.zaglavlje.datumValute = $scope.invoice.currencyDate;
+			data.stavkaFakture = [];
+			$scope.invoice = data;
+		
+			console.log($scope.invoice);
 		
 		if($scope.invoice.id){
 			//zbog cega redirekcija ide na callback?
@@ -167,9 +190,14 @@ angular.module('invoice', [
 			});
 		}
 		else{
-			$scope.invoice.$save(function () {
+			Invoice.save($scope.invoice, function() {
+				$location.path('/invoiceList');
+			  });
+			  /*
+			$scope.invoice.$create(function () {
 				$location.path('/invoiceList');
 			});
+			*/
 		}
 		$log.info("save");
 		

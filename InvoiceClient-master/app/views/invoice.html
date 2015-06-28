@@ -5,78 +5,78 @@
 		<div class="col-md-8">
 			<form>
 				<div class="form-group">
-					<label >Naziv dobavljača:</label>
-					<input class="form-control" ng-model="invoice.suplierName"></input>
+					<label >Naziv dobavljača:</label><i id="sel1" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.suplierName" id="seli1" onblur="proveriParSU('sel',1, 255)"></input>
 				</div>
 				<div class="form-group">
-					<label>Adresa dobavljača:</label>
-					<input class="form-control" ng-model="invoice.suplierAddress"></input>
+					<label>Adresa dobavljača:</label><i id="sel2" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.suplierAddress" id="seli2" onblur="proveriParSU('sel',2,255)"></input>
 				</div>
 				<div class="form-group">
-					<label>PIB dobavljača:</label>
-					<input class="form-control" ng-model="invoice.supplierPib"></input>
+					<label>PIB dobavljača:</label><i id="sel3" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.supplierPib" id="seli3" onblur="proveriParSU('sel',3,11)"></input>
 				</div>
 				<div class="form-group">
-					<label>Naziv kupca:</label>
-					<input class="form-control" ng-model="invoice.buyerName"></input>
+					<label>Naziv kupca:</label><i id="sel4" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.buyerName" id="seli4" onblur="proveriParSU('sel',4,55)"></input>
 				</div>
 				<div class="form-group">
-					<label>Adresa kupca:</label>
-					<input class="form-control" ng-model="invoice.buyerAddress"></input>
+					<label>Adresa kupca:</label><i id="sel5" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.buyerAddress" id="seli5" onblur="proveriParSU('sel',5,55)"></input>
 				</div>
 				<div class="form-group">
-					<label>PIB kupca:</label>
-					<input class="form-control" ng-model="invoice.buyerPib"></input>
+					<label>PIB kupca:</label><i id="sel6" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.buyerPib" id="seli6" onblur="proveriParSU('sel',6, 11)"></input>
 				</div>
 				<div class="form-group">
-					<label>Broj računa:</label>
-					<input class="form-control" ng-model="invoice.acountNumber"></input>
+					<label>Broj računa:</label><i id="sel7" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.acountNumber" id="seli7" onblur="proveriParSUInt('sel',7, 6)"></input>
 				</div>
 				<div class="form-group">
-					<label>Datum računa:</label>
+					<label>Datum računa:</label><i id="sel8" style="visibility:hidden;color:red;">Obavezno polje</i>
 					<div class="input-group">
-						<input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="invoice.date" is-open="dateOpened" close-text="Close" />
+						<input type="text" class="form-control" id="seli8" onblur="proveriParSUDate('sel',8)" datepicker-popup="yyyy-MM-dd" ng-model="invoice.date" is-open="dateOpened" close-text="Close" />
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default" ng-click="openDatepicker($event, 'dateOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
 						</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label >Vrednost robe:</label>
-					<input class="form-control" ng-model="invoice.totalGoodsValue"></input>
+					<label >Vrednost robe:</label><i id="sel9" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalGoodsValue" id="seli9" onblur="proveriParSUDouble('sel',9, 15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Vrednost usluga:</label>
-					<input class="form-control" ng-model="invoice.totalServiceValue"></input>
+					<label>Vrednost usluga:</label><i id="sel10" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalServiceValue" id="seli10" onblur="proveriParSUDouble('sel',10,15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Ukupno roba i usluge:</label>
-					<input class="form-control" ng-model="invoice.totalValue"></input>
+					<label>Ukupno roba i usluge:</label><i id="sel11" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalValue" id="seli11" onblur="proveriParSUDouble('sel',11,15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Ukupan rabat:</label>
-					<input class="form-control" ng-model="invoice.totalRabate"></input>
+					<label>Ukupan rabat:</label><i id="sel12" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalRabate"id="seli12" onblur="proveriParSUDouble('sel',12,15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Ukupan porez:</label>
-					<input class="form-control" ng-model="invoice.totalTax"></input>
+					<label>Ukupan porez:</label><i id="sel13" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalTax"id="seli13" onblur="proveriParSUDouble('sel',13,15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Oznaka valute:</label>
-					<input class="form-control" ng-model="invoice.currency"></input>
+					<label>Oznaka valute:</label><i id="sel14" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.currency"id="seli14" onblur="proveriParSU('sel',14,3)"></input>
 				</div>
 				<div class="form-group">
-					<label>Iznos za uplatu:</label>
-					<input class="form-control" ng-model="invoice.totalAmount"></input>
+					<label>Iznos za uplatu:</label><i id="sel15" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.totalAmount"id="seli15" onblur="proveriParSUDouble('sel',15,15)"></input>
 				</div>
 				<div class="form-group">
-					<label>Uplata na račun:</label>
-					<input class="form-control" ng-model="invoice.paymentAccount"></input>
+					<label>Uplata na račun:</label><i id="sel16" style="visibility:hidden;color:red;">Obavezno polje</i>
+					<input class="form-control" ng-model="invoice.paymentAccount" id="seli16" onblur="proveriParSU('sel',16,18)"></input>
 				</div>
 				<div class="form-group">
-					<label>Datum valute:</label>
+					<label>Datum valute:</label><i id="sel17" style="visibility:hidden;color:red;">Obavezno polje</i>
 					<div class="input-group">
-						<input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="invoice.currencyDate" is-open="currencyDateOpened" close-text="Close" />
+						<input type="text" class="form-control" id="seli17" onblur="proveriParSUDate('sel',17)" datepicker-popup="yyyy-MM-dd" ng-model="invoice.currencyDate" is-open="currencyDateOpened" close-text="Close" />
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default" ng-click="openDatepicker($event, 'currencyDateOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
 						</span>
