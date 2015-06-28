@@ -23,7 +23,6 @@ angular.module('invoiceItem', [])
 								'action':'delete'});
 	};
 	$scope.compare = function(item, prop, val, comparator){
-		console.log("u compare u invoiice item");
 		return function(item){
 			if (comparator=="=")
 				return item[prop] == val;

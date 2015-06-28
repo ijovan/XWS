@@ -17,7 +17,7 @@
  		"buyerAddress": "Skojevska 12",
  		"acountNumber": 1226458,
  		"date": "2015-11-11",
- 		"totalGoodsValue": 5000.0,
+ 		"totalGoodsValue": 900.0,
  		"totalServiceValue": 0.0,
  		"totalValue": 5000.0,
  		"totalRabate": 0.0,
@@ -109,13 +109,37 @@
 	
  	];
  	//preuzimanje niza faktura sa servera
-	/*
+	
  	Invoice.query().$promise.then(function (data) {
  		$scope.invoices = data;
+		console.log($scope.invoices);
+		data.forEach(function(entry) {
+			var invoice = {};
+			var zaglavlje = entry.zaglavlje;
+			invoice.id = entry.id;
+			invoice.suplierName = zaglavlje.nazivDobavljaca;
+			invoice.suplierAddress = zaglavlje.adresaDobavljaca;
+			invoice.supplierPib = zaglavlje.pibdobavljaca;
+			invoice.buyerName = zaglavlje.nazivKupca;
+			invoice.buyerAddress = zaglavlje.adresaKupca;
+			invoice.buyerPib = zaglavlje.pibkupca;
+			invoice.acountNumber= zaglavlje.BrojRacuna;
+			invoice.date= zaglavlje.datumRacuna;
+			invoice.totalGoodsValue= zaglavlje.vrednostRobe;
+			invoice.totalServiceValue= zaglavlje.vrednostUsluga;
+			invoice.totalValue= zaglavlje.ukupnoRobaIUsluga;
+			invoice.totalRabate= zaglavlje.ukupanRabat;
+			invoice.totalTax= zaglavlje.ukupanPorez;
+			invoice.currency= zaglavlje.oznakaValute;
+			invoice.totalAmount= zaglavlje.iznosZaUplatu;
+			invoice.paymentAccount = zaglavlje.uplataNaRacun;
+			invoice.currencyDate = zaglavlje.datumValute;
+			invoice.invoiceItems = [];
+			$scope.invoices.push(invoice);
+		});
  	}, function (error) {
  		console.log(error);
  	});
-	*/
 
 	///$scope.invoices = Invoice.query();
 	$log.info($scope.invoices.length);//0
@@ -158,11 +182,9 @@
 	$scope.comparatorAmountSelect = $scope.comparators[0];
 	
 	$scope.compare = function(item, prop, val, comparator){
-		console.log("u compare");
 		if(val==null || val.trim()=='')
 			return true;
 		//Unary plus za konverziju u broj
-		console.log(comparator+" "+val);
 			if (comparator=='=')
 				return +item[prop] == +val;
 			if (comparator=="<")
@@ -173,7 +195,6 @@
 	
 	$scope.datecompare = function(item, prop, val, comparator){
 		//var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/;
-		console.log("u datecompare " +val);
 		if(val==null)
 			return true;
 		//if ((String(val)).match(dateReg))
@@ -183,7 +204,6 @@
 			itemdate.setHours(0,0,0,0);
 			val.setHours(0,0,0,0);
 		//Unary plus za konverziju u milisekunde
-		console.log(comparator+" "+itemdate);
 			if (comparator=='=')
 				return +itemdate == +val;
 			if (comparator=="<")
@@ -195,6 +215,28 @@
 			//return true;
     };
 	
+	$scope.sortBy = null;
+	$scope.sortElementId = null;
+	
+	$scope.toggleSortInvoices = function(prop, element) 
+	{
+		var plusVersion= '+'+prop;
+		if ($scope.sortBy!=plusVersion)
+		{
+			if($scope.sortElementId!=null)
+				document.getElementById($scope.sortElementId).className = "fa fa-fw fa-sort";
+			$scope.sortBy = plusVersion;
+			document.getElementById(element).className = "fa fa-fw fa-sort-asc";
+		}
+		else
+		{
+			if($scope.sortElementId!=null)
+				document.getElementById($scope.sortElementId).className = "fa fa-fw fa-sort";
+			$scope.sortBy = '-'+prop;
+			document.getElementById(element).className = "fa fa-fw fa-sort-desc";
+		}
+		$scope.sortElementId = element;
+	}
 	
 	$scope.showInvoice = function (invoice) {
  		if(invoice){
