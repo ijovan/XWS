@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.WebApplicationException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -114,6 +115,7 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 	public boolean validateInvoice(Faktura invoice){
 		JAXBContext jaxbContext;
 		try {
+			System.out.println("Postavljanje konteksta");
 			jaxbContext = JAXBContext.newInstance("xml.project.faktura");
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			//postavljanje validacije
@@ -126,13 +128,19 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 			//EventHandler, koji obradjuje greske, ako se dese prilikom validacije
 			jaxbMarshaller.setEventHandler(new util.MyValidationEventHandler());
             //ucitava se objektni model, a da se pri tome radi i validacija
+			System.out.println("Pred marshall");
 			jaxbMarshaller.marshal(invoice, new File("./xml/Faktura"+invoice.getId()+".xml"));
+			System.out.println("Nakon marshalla");
 		} catch (JAXBException e) {	
-			e.printStackTrace();
-			return false;
-		} catch (SAXException e) {
 			return false;
 		}
+		catch (SAXException e) {
+			return false;
+		}
+		catch (WebApplicationException e) {
+			return false;
+		}
+		
 		return true;
 	}
 

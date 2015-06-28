@@ -51,18 +51,29 @@ public class InvoiceService {
 	@Path("/{id}/fakture/") 
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sendInvoice(@PathParam("id") String id, Faktura tf) throws JAXBException, IOException{
-		ResponseBuilder rb;
+	public Response sendInvoice(@PathParam("id") String id, Faktura tf) {
+		ResponseBuilder rb = null;
+		System.out.println("Upao u servis");
 		//provera da li je poslovni parner kompanije
 		if(isPartner(id)){
 			//provera da li je faktura ispravna
+			System.out.println("Stranka jeste u partnerima");
 			if(!fakturaDao.validateInvoice(tf)){
-				Faktura save= fakturaDao.persist(tf);
-				rb = Response.created(URI.create("/partneri/"+id+"/fakture/"+save.getId()));
+				Faktura save;
+				try {
+					save = fakturaDao.persist(tf);
+					rb = Response.status(Status.CREATED);
+					rb.contentLocation(URI.create("/partneri/"+id+"/fakture/"+save.getId()));
+				} catch (JAXBException | IOException e) {
+					e.printStackTrace();
+				}
+
 			}else{
+				System.out.println("Lose poslata faktura/zahtev");
 				rb = Response.status(Status.BAD_REQUEST);
 			}
 		}else{
+			System.out.println("Stranka koja zeli komunikaciju nije partner firme");
 			rb = Response.status(Status.FORBIDDEN);
 		}
 		return rb.build();
