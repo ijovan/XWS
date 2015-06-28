@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
@@ -18,8 +17,7 @@ import baza.EntityManagerBaseX;
 @Singleton
 public class DBTest {
 
-	@EJB
-	private static RacunDao racun;
+	private static RacunDao racun = new RacunDao();
 	
 //	@PostConstruct
 //	public void run() throws Exception {
@@ -35,8 +33,7 @@ public class DBTest {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		foo4();
-		foo5();
+		foo1();
 	}
 
 	public static void foo0() throws Exception {

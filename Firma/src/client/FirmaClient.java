@@ -18,7 +18,6 @@ import banka.BankaPort;
 
 public class FirmaClient {
 
-	private static String brojRacunaFirme;
 	private static BankaPort banka;
 
 	static {
@@ -50,6 +49,7 @@ public class FirmaClient {
 				if (presek == null || presek.getStavkePreseka() == null) {
 					break;
 				}
+				System.out.println(presek.getZaglavlje().getNovoStanje());
 			}
 		} catch (DatatypeConfigurationException e) {
 			e.printStackTrace();
@@ -74,7 +74,7 @@ public class FirmaClient {
 			nalogZaPlacanje.setRacunPoverioca("345000000000000001");
 			nalogZaPlacanje.setModelOdobrenja(new BigInteger("97"));
 			nalogZaPlacanje.setPozivNaBrojOdobrenja("345");
-			nalogZaPlacanje.setIznos(new BigDecimal("300000"));
+			nalogZaPlacanje.setIznos(new BigDecimal("3000"));
 			nalogZaPlacanje.setOznakaValute("RSD");
 			nalogZaPlacanje.setHitno(false);
 
@@ -84,10 +84,11 @@ public class FirmaClient {
 		}
 	}
 
-	private static TIzvod slanjeZahtevaZaIzvod(int redniBrojPreseka, XMLGregorianCalendar datum) {
+	private static TIzvod slanjeZahtevaZaIzvod(Integer redniBrojPreseka, XMLGregorianCalendar datum) {
 		TZahtevZaIzvod zahtev = new TZahtevZaIzvod();
-		zahtev.setBrojRacuna(brojRacunaFirme);
+		zahtev.setBrojRacuna("012000000000000000");
 		zahtev.setDatum(datum);
+		zahtev.setRadniBrojPreseka(new BigInteger(redniBrojPreseka.toString()));
 		return banka.zahtevZaIzvod(zahtev);
 	}
 

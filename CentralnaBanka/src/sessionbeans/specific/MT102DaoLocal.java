@@ -7,8 +7,8 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import sessionbeans.common.GenericDaoLocal;
-import xml.mt102.Placanje;
 import xml.mt102.MT102;
+import xml.mt102.Placanje;
 
 public interface MT102DaoLocal extends GenericDaoLocal<MT102, Long>{
 	

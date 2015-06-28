@@ -9,8 +9,8 @@ import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
 
 import sessionbeans.common.GenericDao;
-import xml.mt102.Placanje;
 import xml.mt102.MT102;
+import xml.mt102.Placanje;
 
 @Stateless
 @LocalBean
@@ -24,7 +24,7 @@ public class MT102Dao extends GenericDao<MT102, Long> implements MT102DaoLocal{
 	
 	public static final String contextPath = "xml.mt102";
 	
-	public static final String schemaName = "mt102";
+	public static final String schemaName = "mt102s";
 
 	public MT102Dao()
 	{

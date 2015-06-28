@@ -8,19 +8,20 @@ package banka;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import sessionbeans.specific.BankaDao;
+import sessionbeans.specific.RacunDao;
 import xml.banka.Banka;
 import xml.globals.TFirma;
 import xml.izvod.StavkaPreseka;
@@ -48,6 +49,9 @@ import centralnabanka.CentralnaBankaPort;
 
 public class BankaPortImpl implements BankaPort {
 
+	private static RacunDao racunDao;
+	private static BankaDao bankaDao;
+
 	private static final Banka banka = new Banka("012", "000000000000000000", "AAAAAAAA");
 	private static CentralnaBankaPort centralnaBanka;
 	private static HashMap<String, RacunFirme> racuni = new HashMap<String, RacunFirme>();
@@ -55,41 +59,51 @@ public class BankaPortImpl implements BankaPort {
 
 	public static void main(String[] args) {
 		init();
-		clearingAndSettlement(banka);
+		clearingAndSettlement();
 	}
-	
+
 	private static void init() {
 		try {
 			URL wsdlLocation = new URL("http://localhost:8080/centralnabanka/services/CentralnaBanka?wsdl");
 			QName serviceName = new QName("http://centralnabanka", "centralnaBankaService");
 			QName portName = new QName("http://centralnabanka", "centralnaBankaPort");
-			
-
 			Service service = Service.create(wsdlLocation, serviceName);
-
 			centralnaBanka = service.getPort(portName, CentralnaBankaPort.class); 
-		} catch (MalformedURLException e) {
-			System.out.println("Failed to connect to Central Bank.");
+			racunDao = new RacunDao();
+			bankaDao = new BankaDao();
+			List<RacunFirme> rfs = racunDao.findAll();
+			List<Banka> bs = bankaDao.findAll();
+			racuni.clear();
+			banke.clear();
+			for (RacunFirme racunFirme : rfs) {
+				racuni.put(racunFirme.getBroj(), racunFirme);
+			}
+			for (Banka banka : bs) {
+				banke.put(banka.getOznakaBanke(), banka);
+			}
+			System.out.println("Bank init done.");
+		} catch (Exception e) {
+			System.out.println("Bank init failed.");
 			e.printStackTrace();
 		}
-		racuni.put("012000000000000000", new RacunFirme("012000000000000000", new BigDecimal("300000")));
-		racuni.put("012000000000000001", new RacunFirme("012000000000000001", new BigDecimal("0")));
-		banke.put("345", new Banka("345", "000000000000000001", "BBBBBBBB"));
-		banke.put("678", new Banka("012", "000000000000000002", "CCCCCCCC"));
-		System.out.println("Bank init done.");
 	}
 
-	private static void clearingAndSettlement(Banka b) {
+	private static void clearingAndSettlement() {
 		try {
 			GregorianCalendar c = new GregorianCalendar();
 			XMLGregorianCalendar date = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-			clearingAndSettlementConstruct(b, date);
-		} catch (DatatypeConfigurationException e) {
+			for (Banka b : banke.values()) {
+				if (b.getPlacanja().size() == 0) {
+					continue;
+				}
+				clearingAndSettlementConstruct(b, date);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void clearingAndSettlementConstruct(Banka b, XMLGregorianCalendar date) {
+	private static void clearingAndSettlementConstruct(Banka b, XMLGregorianCalendar date) throws Exception {
 		MT102 mt102 = new MT102();
 		mt102.setUID("");/////
 		mt102.setSWIFTDuznika(banka.getSwiftKod());
@@ -101,6 +115,8 @@ public class BankaPortImpl implements BankaPort {
 			sum.add(p.getIznos());
 			mt102.getPlacanja().add(p);
 		}
+		b.getPlacanja().clear();
+		bankaDao.merge(b, b.getId());
 		mt102.setUkupanIznos(sum);
 		mt102.setSifraValute("RSD");
 		mt102.setDatumValute(date);
@@ -122,6 +138,8 @@ public class BankaPortImpl implements BankaPort {
 				stavka.setIznos(p.getIznos());
 				stavka.setSmer("");/////
 				racuni.get(stavka.getRacunDuznika()).getStavke().add(stavka);
+				RacunFirme rf = racuni.get(stavka.getRacunDuznika());
+				racunDao.merge(rf, rf.getId());
 			}
 		}
 	}
@@ -134,25 +152,33 @@ public class BankaPortImpl implements BankaPort {
 	public xml.izvod.TIzvod zahtevZaIzvod(xml.zahtevzaizvod.TZahtevZaIzvod parameters) { 
 		LOG.info("Executing operation zahtevZaIzvod");
 		System.out.println(parameters);
-//		try {
-//			xml.izvod.TIzvod _return = new xml.izvod.TIzvod();
-//			return _return;
-//		} catch (java.lang.Exception ex) {
-//			ex.printStackTrace();
-//			throw new RuntimeException(ex);
-//		}
+		//		try {
+		//			xml.izvod.TIzvod _return = new xml.izvod.TIzvod();
+		//			return _return;
+		//		} catch (java.lang.Exception ex) {
+		//			ex.printStackTrace();
+		//			throw new RuntimeException(ex);
+		//		}
 		String brojRacuna = parameters.getBrojRacuna();
 		RacunFirme racunFirme = racuni.get(brojRacuna);
 		if (racunFirme == null) {
+			System.out.println("Firma nije nadjena");
 			return null;
 		}
 		ArrayList<StavkaPreseka> stavke = new ArrayList<StavkaPreseka>();
 		for (StavkaPreseka sp : racunFirme.getStavke()) {
-			if (sp.getDatumNaloga().equals(parameters.getDatum())) {
+			XMLGregorianCalendar a = sp.getDatumNaloga();
+			XMLGregorianCalendar b = parameters.getDatum();
+			System.out.println(a + " |||" + b);
+			if (a.getYear() == b.getYear() && a.getMonth() == b.getMonth() &&
+					a.getDay() == b.getDay()) {
 				stavke.add(sp);
+				System.out.println("Dodato u listu.");
 			}
 		}
+		System.out.println("Izgradjena lista.");
 		int rbPreseka = parameters.getRadniBrojPreseka().intValue();
+		System.out.println(rbPreseka + " " + stavke.size());
 		if (rbPreseka * 5 <= stavke.size()) {
 			TIzvod izvod = new TIzvod();
 			int curr = rbPreseka * 5;
@@ -164,6 +190,7 @@ public class BankaPortImpl implements BankaPort {
 					break;
 				}
 			}
+			System.out.println("Izgradjena lista stavki.");
 			Zaglavlje zaglavlje = new Zaglavlje();
 			zaglavlje.setBrojRacuna(parameters.getBrojRacuna());
 			zaglavlje.setDatumNaloga(parameters.getDatum());
@@ -210,33 +237,35 @@ public class BankaPortImpl implements BankaPort {
 		//			ex.printStackTrace();
 		//			throw new RuntimeException(ex);
 		//		}
-		racuni.put("345000000000000000", new RacunFirme("345000000000000000", new BigDecimal("300000")));//////
-		racuni.put("345000000000000001", new RacunFirme("345000000000000001", new BigDecimal("0")));/////
+
+		init();
+		
 		String racunPrimaoca = parameters.getPrimalacPoverilac().getRacun();
-		if (racuni.containsKey(racunPrimaoca)) {
-			RacunFirme trenutno = racuni.get(racunPrimaoca);
-			trenutno.setStanje(trenutno.getStanje().add(parameters.getIznos()));
-			racuni.put(racunPrimaoca, trenutno);
-		}
 		if (racuni.containsKey(racunPrimaoca)) {
 			BigDecimal trenutno = racuni.get(racunPrimaoca).getStanje();
 			racuni.get(racunPrimaoca).setStanje(trenutno.add(parameters.getIznos()));
 		}
-		StavkaPreseka stavka = new StavkaPreseka();
-		stavka.setDuznikNalogodavac(parameters.getDuznikNalogodavac().getNaziv());
-		stavka.setSvrhaPlacanja(parameters.getSvrhaPlacanja());
-		stavka.setPrimalacPoverilac(parameters.getPrimalacPoverilac().getNaziv());
-		stavka.setDatumNaloga(parameters.getDatumNaloga());
-		stavka.setDatumValute(parameters.getDatumValute());
-		stavka.setRacunDuznika(parameters.getDuznikNalogodavac().getRacun());
-		stavka.setModelZaduzenja(parameters.getDuznikNalogodavac().getModel());
-		stavka.setPozivNaBrojZaduzenja(parameters.getDuznikNalogodavac().getPozivNaBroj());
-		stavka.setRacunPoverioca(parameters.getPrimalacPoverilac().getRacun());
-		stavka.setModelOdobrenja(parameters.getPrimalacPoverilac().getModel());
-		stavka.setPozivNaBrojOdobrenja(parameters.getPrimalacPoverilac().getPozivNaBroj());
-		stavka.setIznos(parameters.getIznos());
-		stavka.setSmer("");/////
-		racuni.get(racunPrimaoca).getStavke().add(stavka);
+//		StavkaPreseka stavka = new StavkaPreseka();
+//		stavka.setDuznikNalogodavac(parameters.getDuznikNalogodavac().getNaziv());
+//		stavka.setSvrhaPlacanja(parameters.getSvrhaPlacanja());
+//		stavka.setPrimalacPoverilac(parameters.getPrimalacPoverilac().getNaziv());
+//		stavka.setDatumNaloga(parameters.getDatumNaloga());
+//		stavka.setDatumValute(parameters.getDatumValute());
+//		stavka.setRacunDuznika(parameters.getDuznikNalogodavac().getRacun());
+//		stavka.setModelZaduzenja(parameters.getDuznikNalogodavac().getModel());
+//		stavka.setPozivNaBrojZaduzenja(parameters.getDuznikNalogodavac().getPozivNaBroj());
+//		stavka.setRacunPoverioca(parameters.getPrimalacPoverilac().getRacun());
+//		stavka.setModelOdobrenja(parameters.getPrimalacPoverilac().getModel());
+//		stavka.setPozivNaBrojOdobrenja(parameters.getPrimalacPoverilac().getPozivNaBroj());
+//		stavka.setIznos(parameters.getIznos());
+//		stavka.setSmer("");/////
+//		racuni.get(racunPrimaoca).getStavke().add(stavka);
+//		try {
+//			RacunFirme rf = racuni.get(racunPrimaoca);
+//			racunDao.merge(rf, rf.getId());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return true;
 	}
 
@@ -274,15 +303,41 @@ public class BankaPortImpl implements BankaPort {
 		BigDecimal iznos = parameters.getIznos();
 		String nalogodavac = parameters.getRacunDuznika();
 		if (racuni.get(nalogodavac).getStanje().compareTo(iznos) < 0) {
+			System.out.println("Nema dovoljno novca na racunu.");
 			return false;
 		}
+		System.out.println(racuni.keySet());
 		if (racuni.containsKey(parameters.getRacunPoverioca())) {
-			System.out.println("Loklani transfer.");
+			System.out.println("Lokalni transfer.");
 			String primalac = parameters.getRacunPoverioca();
 			BigDecimal staroNalogodavac = racuni.get(nalogodavac).getStanje();
 			BigDecimal staroPrimalac = racuni.get(primalac).getStanje();
 			racuni.get(nalogodavac).setStanje(staroNalogodavac.subtract(iznos));
 			racuni.get(primalac).setStanje(staroPrimalac.add(iznos));
+			StavkaPreseka stavka = new StavkaPreseka();
+			stavka.setDuznikNalogodavac(parameters.getDuznikNalogodavac());
+			stavka.setSvrhaPlacanja(parameters.getSvrhaPlacanja());
+			stavka.setPrimalacPoverilac(parameters.getPrimalacPoverilac());
+			stavka.setDatumNaloga(parameters.getDatumNaloga());
+			stavka.setDatumValute(parameters.getDatumValute());
+			stavka.setRacunDuznika(parameters.getRacunDuznika());
+			stavka.setModelZaduzenja(parameters.getModelZaduzenja());
+			stavka.setPozivNaBrojZaduzenja(parameters.getPozivNaBrojZaduzenja());
+			stavka.setRacunPoverioca(parameters.getRacunPoverioca());
+			stavka.setModelOdobrenja(parameters.getModelOdobrenja());
+			stavka.setPozivNaBrojOdobrenja(parameters.getPozivNaBrojOdobrenja());
+			stavka.setIznos(parameters.getIznos());
+			stavka.setSmer("");/////
+			try {
+				RacunFirme rf1 = racuni.get(nalogodavac);
+				rf1.getStavke().add(stavka);
+				racunDao.merge(rf1, rf1.getId());
+				RacunFirme rf2 = racuni.get(primalac);
+				rf2.getStavke().add(stavka);
+				racunDao.merge(rf2, rf2.getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return true;
 		}
 		if (parameters.isHitno() || parameters.getIznos().compareTo(new BigDecimal("250000")) >= 0) {
@@ -334,6 +389,14 @@ public class BankaPortImpl implements BankaPort {
 				stavka.setIznos(mt103.getIznos());
 				stavka.setSmer("");/////
 				racuni.get(stavka.getRacunDuznika()).getStavke().add(stavka);
+				try {
+					RacunFirme rf1 = racuni.get(stavka.getRacunDuznika());
+					racunDao.merge(rf1, rf1.getId());
+					RacunFirme rf2 = racuni.get(nalogodavac);
+					racunDao.merge(rf2, rf2.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			System.out.println("Globalni transfer; ne-RTGS.");
@@ -359,19 +422,27 @@ public class BankaPortImpl implements BankaPort {
 			String primalac = placanje.getPrimalacPoverilac().getRacun();
 			Banka bPrimalac = banke.get(primalac.subSequence(0, 3));
 			if (bPrimalac == null) {
+				System.out.println("Banka nije nadjena.");
 				return false;
 			} else {
+				placanje.setSWIFTDuznika(banka.getSwiftKod());
+				placanje.setSWIFTPoverioca(bPrimalac.getSwiftKod());
+				bPrimalac.getPlacanja().add(placanje);
 				nalogodavac = placanje.getDuznikNalogodavac().getRacun();
 				BigDecimal stanje = racuni.get(nalogodavac).getStanje();
 				racuni.get(nalogodavac).setStanje(stanje.subtract(placanje.getIznos()));
+				try {
+					RacunFirme rf1 = racuni.get(nalogodavac);
+					racunDao.merge(rf1, rf1.getId());
+					bankaDao.merge(bPrimalac, bPrimalac.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-			placanje.setSWIFTDuznika(banka.getSwiftKod());
-			placanje.setSWIFTPoverioca(bPrimalac.getSwiftKod());
-			bPrimalac.getPlacanja().add(placanje);
 		}
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see banka.BankaPort#mt910(xml.mt910.TMT910  parameters )*
 	 */
@@ -393,20 +464,25 @@ public class BankaPortImpl implements BankaPort {
 	public boolean mt102(xml.mt102.MT102 parameters) { 
 		LOG.info("Executing operation mt102");
 		System.out.println(parameters);
-//		try {
-//			boolean _return = false;
-//			return _return;
-//		} catch (java.lang.Exception ex) {
-//			ex.printStackTrace();
-//			throw new RuntimeException(ex);
-//		}		
-		racuni.put("345000000000000000", new RacunFirme("345000000000000000", new BigDecimal("300000")));//////
-		racuni.put("345000000000000001", new RacunFirme("345000000000000001", new BigDecimal("0")));/////
+		init();
+		//		try {
+		//			boolean _return = false;
+		//			return _return;
+		//		} catch (java.lang.Exception ex) {
+		//			ex.printStackTrace();
+		//			throw new RuntimeException(ex);
+		//		}		
 		for (Placanje p : parameters.getPlacanja()) {
 			String racunPrimaoca = p.getPrimalacPoverilac().getRacun();
 			if (racuni.containsKey(racunPrimaoca)) {
 				BigDecimal trenutno = racuni.get(racunPrimaoca).getStanje();
 				racuni.get(racunPrimaoca).setStanje(trenutno.add(p.getIznos()));
+				try {
+					RacunFirme rf1 = racuni.get(racunPrimaoca);
+					racunDao.merge(rf1, rf1.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			StavkaPreseka stavka = new StavkaPreseka();
 			stavka.setDuznikNalogodavac(p.getDuznikNalogodavac().getNaziv());
@@ -423,6 +499,12 @@ public class BankaPortImpl implements BankaPort {
 			stavka.setIznos(p.getIznos());
 			stavka.setSmer("");/////
 			racuni.get(racunPrimaoca).getStavke().add(stavka);
+			try {
+				RacunFirme rf1 = racuni.get(racunPrimaoca);
+				racunDao.merge(rf1, rf1.getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return true;
 	}

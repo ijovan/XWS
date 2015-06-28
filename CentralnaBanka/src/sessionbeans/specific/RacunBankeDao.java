@@ -12,9 +12,9 @@ import xml.racunbanke.RacunBanke;
 @Local(RacunBankaDaoLocal.class)
 public class RacunBankeDao extends GenericDao<RacunBanke, Long> implements RacunBankaDaoLocal {
 
-	public static final String contextPath = "xml.banka";
+	public static final String contextPath = "xml.racunbanke";
 	
-	public static final String schemaName = "banks";
+	public static final String schemaName = "bank-accounts";
 	
 	public RacunBankeDao(String contextPath, String schemaName) {
 		super(contextPath, schemaName);

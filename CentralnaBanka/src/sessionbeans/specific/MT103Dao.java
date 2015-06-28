@@ -19,7 +19,7 @@ public class MT103Dao extends GenericDao<MT103, Long> implements MT103DaoLocal{
 	
 	public static final String contextPath = "xml.mt102";
 	
-	public static final String schemaName = "mt102";
+	public static final String schemaName = "mt102s";
 
 	public MT103Dao()
 	{

@@ -11,13 +11,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import sessionbeans.specific.MT102Dao;
+import sessionbeans.specific.MT103Dao;
+import sessionbeans.specific.RacunBankeDao;
 import xml.mt102.MT102;
 import xml.mt102.Placanje;
+import xml.mt103.MT103;
 import xml.mt900.TMT900;
 import xml.mt910.TMT910;
 import xml.racunbanke.RacunBanke;
@@ -40,18 +45,40 @@ import banka.BankaPort;
 public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 
     private static final Logger LOG = Logger.getLogger(CentralnaBankaPortImpl.class.getName());
+    
+	private static RacunBankeDao racunBankeDao;
+	private static MT102Dao mt102Dao;
+	private static MT103Dao mt103Dao;
 
     private static HashMap<String, RacunBanke> racuniBanaka = new HashMap<String, RacunBanke>();
-	private static QName serviceName = new QName("http://banka", "bankaService");
-	private static QName portName = new QName("http://banka", "bankaPort");
-	private static ArrayList<MT102> mt102s = new ArrayList<MT102>();
+	private static List<MT102> mt102s = new ArrayList<MT102>();
+	private static List<MT103> mt103s = new ArrayList<MT103>();
     
 	private static void init() {
-		racuniBanaka.put("000000000000000000", new RacunBanke("AAAAAAAA", "000000000000000000", new BigDecimal(10000000)));
-		racuniBanaka.put("000000000000000001", new RacunBanke("BBBBBBBB", "000000000000000001", new BigDecimal(10000000)));
+		try {
+			racunBankeDao = new RacunBankeDao();
+			mt102Dao = new MT102Dao();
+			mt103Dao = new MT103Dao();
+			List<RacunBanke> rbs = racunBankeDao.findAll();
+			mt102s = mt102Dao.findAll();
+			mt103s = mt103Dao.findAll();
+			racuniBanaka.clear();
+			for (RacunBanke racunBanke : rbs) {
+				racuniBanaka.put(racunBanke.getObracunskiRacun(), racunBanke);
+			}
+			System.out.println("Bank init done.");
+		} catch (Exception e) {
+			System.out.println("Bank init failed.");
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {
+		init();
+		clearingAndSettlement();
+	}
+	
+	private static void clearingAndSettlement() {
 		for (MT102 mt102 : mt102s) {
 			BigDecimal suma = new BigDecimal("0");
 			for (Placanje p : mt102.getPlacanja()) {
@@ -169,6 +196,8 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
     private static BankaPort constructPort(String swift) throws MalformedURLException {
     	swift = "banka";
 		URL wsdlLocation = new URL("http://localhost:8080/" + swift.toLowerCase() + "/services/Banka?wsdl");
+		QName serviceName = new QName("http://banka", "bankaService");
+		QName portName = new QName("http://banka", "bankaPort");
 		Service service = Service.create(wsdlLocation, serviceName);
 		return service.getPort(portName, BankaPort.class); 
     }
@@ -186,7 +215,14 @@ public class CentralnaBankaPortImpl implements CentralnaBankaPort {
 //            ex.printStackTrace();
 //            throw new RuntimeException(ex);
 //        }
-        mt102s.add(parameters);
+        init();
+        try {
+        	parameters.setId(new Long(mt102Dao.findAll().size()) + 1);
+            mt102s.add(parameters);
+			mt102Dao.persist(parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         return true;
     }
 

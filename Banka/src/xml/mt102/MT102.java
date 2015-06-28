@@ -21,8 +21,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import sessionbeans.common.Identifiable;
-
 
 /**
  * <p>Java class for anonymous complex type.
@@ -80,7 +78,7 @@ import sessionbeans.common.Identifiable;
     "placanja"
 })
 @XmlRootElement(name = "MT102")
-public class MT102 extends Identifiable{
+public class MT102 {
 
     @XmlElement(name = "uID", required = true)
     protected String uid;
