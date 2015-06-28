@@ -14,6 +14,7 @@ angular.module('invoice', [
 		
 		//preuzimanje fakure sa servera. Posto smo u Invoice factory rutu definisali kao '...invoice/:invoiceId' invoiceId ce se proslediti kao parametar rute na server 
 		Invoice.get({'invoiceId':invoiceId}).$promise.then(function (data) {
+			/*
 			console.log(data);
 			console.log(data["ns2.Faktura"]["ns2.Zaglavlje"]);
 			var zaglavlje = data["ns2.Faktura"]["ns2.Zaglavlje"];
@@ -35,6 +36,48 @@ angular.module('invoice', [
 			$scope.invoice.totalAmount= zaglavlje["ns2.Iznos_za_uplatu"];
 			$scope.invoice.paymentAccount = zaglavlje["ns2.Uplata_na_racun"];
 			$scope.invoice.currencyDate = zaglavlje["ns2.Datum_valute"];
+			*/
+			var zaglavlje = data.zaglavlje;
+			$scope.invoice={};
+			$scope.invoice.id = zaglavlje.idporuke;
+			$scope.invoice.suplierName = zaglavlje.nazivDobavljaca;
+			$scope.invoice.suplierAddress = zaglavlje.adresaDobavljaca;
+			$scope.invoice.supplierPib = zaglavlje.pibdobavljaca;
+			$scope.invoice.buyerName = zaglavlje.nazivKupca;
+			$scope.invoice.buyerAddress = zaglavlje.adresaKupca;
+			$scope.invoice.buyerPib = zaglavlje.pibkupca;
+			$scope.invoice.acountNumber= zaglavlje.BrojRacuna;
+			$scope.invoice.date= zaglavlje.datumRacuna;
+			$scope.invoice.totalGoodsValue= zaglavlje.vrednostRobe;
+			$scope.invoice.totalServiceValue= zaglavlje.vrednostUsluga;
+			$scope.invoice.totalValue= zaglavlje.ukupnoRobaIUsluga;
+			$scope.invoice.totalRabate= zaglavlje.ukupanRabat;
+			$scope.invoice.totalTax= zaglavlje.ukupanPorez;
+			$scope.invoice.currency= zaglavlje.oznakaValute;
+			$scope.invoice.totalAmount= zaglavlje.iznosZaUplatu;
+			$scope.invoice.paymentAccount = zaglavlje.uplataNaRacun;
+			$scope.invoice.currencyDate = zaglavlje.datumValute;
+			$scope.invoice.invoiceItems = [];
+			var stavke = data.stavkaFakture;
+			console.log(stavke);
+			stavke.forEach(function(entry) {
+				var item = {};
+				console.log(entry);
+				item.rbr = entry.redniBroj;
+				item.goodsName = entry.nazivRobeIliUsluge;
+				item.quantity = entry.kolicina;
+				item.measureUnit = entry.jedinicaMere;
+				item.pricePerUnit = entry.jedinicnaCena;
+				item.amount = entry.vrednost;
+				item.rabatePercentage = entry.procenatRabata;
+				item.rabateAmount = entry.iznosRabata;
+				item.minusRabat = entry.umanjenoZaRabat;
+				item.totalTax = entry.ukupanPorez;
+				item.valid = entry.valid;
+				if (item.valid)
+					$scope.invoice.invoiceItems.push(item);
+			});
+			
 		});
 	}
 	//ako kreiramo novu fakutru
@@ -141,6 +184,29 @@ angular.module('invoice', [
  			$location.path('/showInvoice/'+invoice.id);
  		}
  	}
+	
+	$scope.sortBy = 'rbr';
+	$scope.sortElementId = null;
+	
+	$scope.toggleSortInvoices = function(prop, element) 
+	{
+		var plusVersion= '+'+prop;
+		if ($scope.sortBy!=plusVersion)
+		{
+			if($scope.sortElementId!=null)
+				document.getElementById($scope.sortElementId).className = "fa fa-fw fa-sort";
+			$scope.sortBy = plusVersion;
+			document.getElementById(element).className = "fa fa-fw fa-sort-asc";
+		}
+		else
+		{
+			if($scope.sortElementId!=null)
+				document.getElementById($scope.sortElementId).className = "fa fa-fw fa-sort";
+			$scope.sortBy = '-'+prop;
+			document.getElementById(element).className = "fa fa-fw fa-sort-desc";
+		}
+		$scope.sortElementId = element;
+	}
 
 	$scope.delete = function () {
 		if($scope.invoice.id){

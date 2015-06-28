@@ -177,29 +177,29 @@
 <div>
 	<table class="table table-striped table-bordered table-condensed table-hover">
 		<tr>
-			<th ng-click="toggleSortInvoices('suplierName')">Naziv dobavljača<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('suplierAddress')">Adresa dobavljača<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('supplierPib')">PIB dobavljača<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('buyerName')">Naziv kupca<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('buyerAddress')">Adresa kupca<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('buyerPib')">PIB kupca<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('acountNumber')">Broj računa<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('date')">Datum računa<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalGoodsValue')">Vrednost robe<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalServiceValue')">Vrednost usluga<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalValue')">Ukupno<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalRabate')">Ukupan rabat<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalTax')">Ukupan porez<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('currency')">Oznaka valute<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('totalAmount')">Iznos za uplatu<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('paymentAccount')">Uplata na račun<i class="fa fa-fw fa-sort"></i></th>
-			<th ng-click="toggleSortInvoices('currencyDate')">Datum valute<i class="fa fa-fw fa-sort"></i></th>
+			<th>Naziv dobavljača<i id = "sortInvoicesToggle1" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('suplierName','sortInvoicesToggle1')"></i></th>
+			<th>Adresa dobavljača<i id = "sortInvoicesToggle2" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('suplierAddress','sortInvoicesToggle2')"></i></th>
+			<th>PIB dobavljača<i id = "sortInvoicesToggle3" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('supplierPib','sortInvoicesToggle3')"></i></th>
+			<th>Naziv kupca<i id = "sortInvoicesToggle4" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('buyerName','sortInvoicesToggle4')"></i></th>
+			<th>Adresa kupca<i id = "sortInvoicesToggle5" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('buyerAddress','sortInvoicesToggle5')"></i></th>
+			<th>PIB kupca<i id = "sortInvoicesToggle6" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('buyerPib','sortInvoicesToggle6')"></i></th>
+			<th>Broj računa<i id = "sortInvoicesToggle7" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('acountNumber', 'sortInvoicesToggle7')"></i></th>
+			<th>Datum računa<i id = "sortInvoicesToggle8" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('date', 'sortInvoicesToggle8')"></i></th>
+			<th>Vrednost robe<i id = "sortInvoicesToggle9" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('totalGoodsValue', 'sortInvoicesToggle9')"></i></th>
+			<th>Vrednost usluga<i id = "sortInvoicesToggle10" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('totalServiceValue', 'sortInvoicesToggle10')"></i></th>
+			<th>Ukupno<i id = "sortInvoicesToggle11" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('totalValue', 'sortInvoicesToggle11')"></i></th>
+			<th>Ukupan rabat<i id = "sortInvoicesToggle12" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('totalRabate','sortInvoicesToggle12')"></i></th>
+			<th>Ukupan porez<i id = "sortInvoicesToggle13" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('totalTax','sortInvoicesToggle13')"></i></th>
+			<th>Oznaka valute<i id = "sortInvoicesToggle14" class="fa fa-fw fa-sort" ng-click="toggleSortInvoices('currency','sortInvoicesToggle14')"></i></th>
+			<th>Iznos za uplatu<i id = "sortInvoicesToggle15" ng-click="toggleSortInvoices('totalAmount','sortInvoicesToggle15')"class="fa fa-fw fa-sort"></i></th>
+			<th>Uplata na račun<i id = "sortInvoicesToggle16" ng-click="toggleSortInvoices('paymentAccount','sortInvoicesToggle16')" class="fa fa-fw fa-sort"></i></th>
+			<th>Datum valute<i id = "sortInvoicesToggle17" class="fa fa-fw fa-sort"  ng-click="toggleSortInvoices('currencyDate', 'sortInvoicesToggle17')"></i></th>
 			<th></th>
 			<th></th>
 			<th></th>
 			<th></th>
 		</tr>
-		<tr ng-repeat="invoice in invoices | filter: invoiceFilter" ng-if="compare(invoice, 'totalAmount', invoiceFilterAmount, comparatorAmountSelect.label) == true
+		<tr ng-repeat="invoice in invoices | filter: invoiceFilter | orderBy:sortBy" ng-if="compare(invoice, 'totalAmount', invoiceFilterAmount, comparatorAmountSelect.label) == true
 			&& datecompare(invoice, 'date', invoiceFilterdate, comparatorDateSelect.id) == true &&
 			datecompare(invoice, 'currencyDate', invoiceFiltercurrencydate, comparatorCurrencyDateSelect.id) == true" ng-click="showInvoice(invoice)">
 			<td>{{invoice.suplierName}}</td>
