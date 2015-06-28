@@ -2,6 +2,7 @@ package sessionbeans.transaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
+
+import com.sun.xml.internal.ws.util.Pool.Unmarshaller;
 
 import sessionbeans.common.GenericDao;
 import xml.faktura.Faktura;
@@ -111,29 +114,27 @@ public class FakturaDao extends GenericDao<Faktura, Long> implements FakturaDaoL
 
 	
 	@Override
-	public boolean validateInvoice(Faktura invoice){
+	public Faktura validateInvoice(String invoice) throws JAXBException, SAXException  {
 		JAXBContext jaxbContext;
-		try {
-			jaxbContext = JAXBContext.newInstance("xml.project.faktura");
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+			jaxbContext = JAXBContext.newInstance("xml.faktura");
+			javax.xml.bind.Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			//postavljanje validacije
 			//W3C sema
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			//lokacija seme
 			Schema schema = schemaFactory.newSchema(new File("./wsdl/faktura.xsd"));
 			//setuje se sema
-			jaxbMarshaller.setSchema(schema);
+			jaxbUnmarshaller.setSchema(schema);
 			//EventHandler, koji obradjuje greske, ako se dese prilikom validacije
-			jaxbMarshaller.setEventHandler(new util.MyValidationEventHandler());
+			jaxbUnmarshaller.setEventHandler(new util.MyValidationEventHandler());
             //ucitava se objektni model, a da se pri tome radi i validacija
-			jaxbMarshaller.marshal(invoice, new File("./xml/Faktura"+invoice.getId()+".xml"));
-		} catch (JAXBException e) {	
-			e.printStackTrace();
-			return false;
-		} catch (SAXException e) {
-			return false;
-		}
-		return true;
+	
+			StringReader reader = new StringReader(invoice);
+			
+			Faktura f = (Faktura) jaxbUnmarshaller.unmarshal(reader); 
+
+			return f;
 	}
 
 	@Override

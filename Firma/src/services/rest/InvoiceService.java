@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import sessionbeans.transaction.FakturaDaoLocal;
 import xml.faktura.Faktura;
@@ -51,20 +52,34 @@ public class InvoiceService {
 	@Path("/{id}/fakture/") 
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sendInvoice(@PathParam("id") String id, Faktura tf) throws JAXBException, IOException{
+	public Response sendInvoice(@PathParam("id") String id, String tf){
 		ResponseBuilder rb;
+		System.out.println(tf);
 		//provera da li je poslovni parner kompanije
-		if(isPartner(id)){
+				if(isPartner(id)){
 			//provera da li je faktura ispravna
-			if(!fakturaDao.validateInvoice(tf)){
-				Faktura save= fakturaDao.persist(tf);
-				rb = Response.created(URI.create("/partneri/"+id+"/fakture/"+save.getId()));
+					try {
+						Faktura save = fakturaDao.validateInvoice(tf);
+						fakturaDao.persist(save);
+						rb = Response.created(URI.create("/partneri/"+id+"/fakture/"+save.getId()));
+					}
+					catch (JAXBException e)
+					{
+						rb = Response.status(Status.BAD_REQUEST);
+					}
+					catch (SAXException e)
+					{
+						rb = Response.status(Status.BAD_REQUEST);
+					}
+					catch (IOException e)
+					{
+						System.out.println("Ovo ne bi trebalo da se desi nikad..");
+						rb = Response.status(Status.INTERNAL_SERVER_ERROR);
+					}
 			}else{
-				rb = Response.status(Status.BAD_REQUEST);
-			}
-		}else{
-			rb = Response.status(Status.FORBIDDEN);
-		}
+				rb = Response.status(Status.FORBIDDEN);
+			}		
+		
 		return rb.build();
 	}
 

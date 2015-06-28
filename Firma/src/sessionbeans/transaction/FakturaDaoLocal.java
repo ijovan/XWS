@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.xml.sax.SAXException;
+
 import sessionbeans.common.GenericDaoLocal;
 import xml.faktura.Faktura;
 
@@ -22,5 +24,5 @@ public interface FakturaDaoLocal extends GenericDaoLocal<Faktura, Long>{
 	
 	public List<Faktura.StavkaFakture> getInvoiceItemsForInvoice(Long invoiceId, Long partnerId) throws IOException, JAXBException;
 	
-	boolean validateInvoice(Faktura invoice);
+	Faktura validateInvoice(String invoice) throws JAXBException, SAXException;
 }
